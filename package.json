@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "tsx watch --env-file .env src/server.ts"
   },
+  "prisma_Comentarios": {
+    "gerar_banco_de_dados": "npx prisma migrate dev",
+    "executar_o_banco_apos_baixar_no_github": "npx prisma generate"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
