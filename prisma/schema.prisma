@@ -12,3 +12,139 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+enum UserRole {
+  technical
+  customer
+  admin
+}
+
+ model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+  role UserRole @default(customer)
+  avatar String @default("default.svg")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  userHours UserHours []
+  calledCustomer Called[] @relation("CustomerCalls")
+  calledTechnical Called[] @relation("TechnicalCalls")
+
+  @@map("user")
+ }
+
+ model UserHours {
+  id String @id @default(uuid())
+  fkUserTechnical String @map("fk_user_technical")
+  startTime DateTime @map("start_time")
+  endTime DateTime @map("end_time")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  user User @relation(fields: [fkUserTechnical], references: [id])
+
+  @@map("user_hours")
+ } 
+
+ enum CalledStatus {
+  open 
+  close
+  in_progress
+ }
+
+ model Called {
+  id String @id @default(uuid())
+  fkUserCustomer String @map("fk_user_customer")
+  fkUserTechnical String? @map("fk_user_technical")
+  titleCalled String @map("title_called")
+  description String
+  fkServices String @map("fk_services")
+  callStatus CalledStatus @default(open) @map("call_status")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  UserCustomer User @relation("CustomerCalls", fields: [fkUserCustomer], references: [id])
+  UserTechnical User? @relation("TechnicalCalls", fields: [fkUserTechnical], references: [id])
+  services CalledServices[]
+
+  @@map("called")
+ }
+
+ enum ServicesStatus {
+  active
+  inactive
+ }
+
+ model Services {
+  id String @id @default(uuid())
+  titleService String @map("title_service")
+  value Decimal
+  serviceStatus ServicesStatus @default(active) @map("service_status")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  
+  calledServices CalledServices[]
+
+  @@map("services")
+ }
+
+ model CalledServices {
+  id String @id @default(uuid())
+  fkCalled String @map("fk_called")
+  fkServices String @map("fk_services")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  called Called @relation(fields: [fkCalled], references: [id])
+  services Services @relation(fields: [fkServices], references: [id])
+
+  @@map("called_services")
+ }
+
+
+ // Tabela view criados no banco de dados, somente leitura no prisma, são ignorados na criação de tabelas.
+
+ model VWUserTechnical {
+  id String 
+  name String
+  email String
+  password String
+  role UserRole
+  avatar String
+  startTime DateTime @map("start_time")
+  endTime DateTime @map("end_time")
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+
+  @@map("vw_user_technical")
+  @@ignore
+ }
+
+ model VWCalled {
+  createdAt DateTime @map("created_at")
+  id String 
+  titleCalled String @map("title_called")
+  titleService String @map("title_service")
+  valueTotal Decimal @map("value_total")
+  customer String
+  technical String
+  callStatus CalledStatus @map("call_status")
+
+  @@map("vw_called")
+  @@ignore
+ }
+
+ model VWCalledServices {
+  idCalled String @map("id_called")
+  idServices String @map("id_services")
+  titleService String @map("title_service")
+  value Decimal
+  serviceStatus ServicesStatus @map("service_status")
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+
+  @@map("vw_called_services")
+  @@ignore
+ }
