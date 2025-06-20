@@ -84,7 +84,7 @@ enum UserRole {
   serviceStatus ServicesStatus @default(active) @map("service_status")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  
+
   calledServices CalledServices[]
 
   @@map("services")
@@ -105,13 +105,14 @@ enum UserRole {
 
 
  // Tabela view criados no banco de dados, somente leitura no prisma, são ignorados na criação de tabelas.
-
+ 
+/*
  model VWUserTechnical {
   id String 
   name String
   email String
   password String
-  role UserRole
+  role String
   avatar String
   startTime DateTime @map("start_time")
   endTime DateTime @map("end_time")
@@ -130,7 +131,7 @@ enum UserRole {
   valueTotal Decimal @map("value_total")
   customer String
   technical String
-  callStatus CalledStatus @map("call_status")
+  callStatus String @map("call_status")
 
   @@map("vw_called")
   @@ignore
@@ -141,10 +142,12 @@ enum UserRole {
   idServices String @map("id_services")
   titleService String @map("title_service")
   value Decimal
-  serviceStatus ServicesStatus @map("service_status")
+  serviceStatus String @map("service_status")
   createdAt DateTime  @map("created_at")
   updatedAt DateTime? @map("updated_at")
 
   @@map("vw_called_services")
   @@ignore
  }
+ */
+ 
