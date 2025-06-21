@@ -2,6 +2,7 @@ import { Repository } from "../repositories"
 import { userCustomerSchema, userSchema, userTechnicalSchema } from "../schema/user.schema"
 import { AppError } from "../utils/AppError"
 import { UserRole } from "@prisma/client"
+import { hash } from "bcrypt"
 
 // ok
 export const existUser = async (email: string) => {
@@ -29,10 +30,10 @@ export const createUserCustomer = async (data: UserCustomerType) => {
   }
 
   const userExist = await existUser(data.email)
-  console.log(userExist)
   if(!userExist){
     const repository = new Repository()
-    return await repository.user.createCustomer(data)
+    const hashPassword =  await hash(data.password, 12)
+    return await repository.user.createCustomer({...data, password: hashPassword})
   }
   
   throw new AppError("user already registered", 401)
@@ -56,7 +57,8 @@ export const createUserTechnical  = async (data: UserTechnicalType) => {
   const userExist = await existUser(data.email)
   if(!userExist){
     const respository = new Repository()
-    return await respository.user.createTechnical(data)
+    const hashPassword =  await hash(data.password, 12)
+    return await respository.user.createTechnical({...data, password: hashPassword})
   }
 
   throw new AppError("user already registered", 401)
