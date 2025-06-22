@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/server.ts"
+    "dev": "tsx --watch --env-file .env src/server.ts"
   },
   "prisma_Comentarios": {
     "gerar_banco_de_dados": "npx prisma migrate dev",
@@ -19,6 +19,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/multer": "^1.4.13",
+    "@types/swagger-ui-express": "^4.1.8",
     "prisma": "^6.10.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
@@ -32,6 +33,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.1",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^3.25.67"
   }
 }

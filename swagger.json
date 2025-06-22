@@ -1,0 +1,173 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "HelpDesk API",
+    "description": "Essa API foi desenvovido um sistemas completo de criação de chamados e atendimentos HELPDESK",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "post": {
+        "description": "Dados necessario para relização do login.",
+        "summary": "Login",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Login" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token JWT e dados do usuário",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Response Login" }
+              }
+            }
+          },
+          "400": { "description": "Dados inválidos" },
+          "401": { "description": "Credenciais incorretas" },
+          "404": { "description": "Usuário não registrado" }
+        }
+      }
+    },
+
+    "/user/cliente": {
+      "post": {
+        "description": "Dados necessario para cadastro de um novo Cliente no sistema.",
+        "summary": "Criar cliente",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Create User Customer" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Criado com sucesso" },
+          "400": { "description": "Dados inválidos" },
+          "409": { "description": "Usuário já existe" }
+        }
+      }
+    },
+
+    "/user/tecnico": {
+      "post": {
+        "description": "Dados necessario para cadastro de um novo Técnico no sistema, somente admin pode realizar o cadastro.",
+        "summary": "Criar técnico (admin)",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Create User Technical" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Criado com sucesso" },
+          "400": { "description": "Dados inválidos" },
+          "403": { "description": "Acesso negado" },
+          "409": { "description": "Usuário já existe" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "example": "mateus@email.com" },
+          "password": { "type": "string", "example": "123456" }
+        }
+      },
+      "Response Login": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3" },
+              "name": { "example": "Mateus" },
+              "email": { "example": "mateus@email.com" },
+              "role": { "example": "technical" },
+              "avatar": { "example": "default.svg" },
+              "createdAt": { "example": "2025-06-21T17:47:45.345Z" },
+              "updatedAt": { "example": "2025-06-21T22:41:05.771Z" },
+              "userHours": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "startTime": { "example": "2025-06-21T17:08:00.003Z" },
+                    "endTime": { "example": "2025-06-21T17:18:00.003Z" }
+                  }
+                }
+              },
+              "token": { "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" }
+            }
+          }
+        }
+      },
+
+      "Create User Customer": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": { "type": "string", "example": "João da Silva" },
+          "email": { "type": "string", "example": "joao@email.com" },
+          "password": { "type": "string", "example": "123456" }
+        }
+      },
+      "Create User Technical": {
+        "type": "object",
+        "required": ["name", "email", "password", "role", "hours"],
+        "properties": {
+          "name": { "type": "string", "example": "Maria Oliveira" },
+          "email": { "type": "string", "example": "maria@email.com" },
+          "password": { "type": "string", "example": "123456" },
+          "role": { "type": "string", "example": "technical" },
+          "hours": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "startTime": {
+                  "type": "string",
+                  "example": "2025-06-22T08:00:00Z"
+                },
+                "endTime": {
+                  "type": "string",
+                  "example": "2025-06-22T17:00:00Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "description": "Autenticação ultilizando JWT",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    { "name": "Auth", "description": "Login com e-mail e senha" },
+    {
+      "name": "Users",
+      "description": "Cadastro de usuários protegidos por token"
+    }
+  ]
+}

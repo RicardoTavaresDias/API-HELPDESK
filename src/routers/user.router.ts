@@ -6,6 +6,5 @@ import { userAuthorization } from "../middlewares/userAuthorization";
 const userController = new UserController()
 export const userRouter = Router()
 
-userRouter.use(ensureAuthenticated)
 userRouter.post("/cliente", userController.createCustomer)
-userRouter.post("/tecnico", userAuthorization(["admin"]), userController.createTechnical)
+userRouter.post("/tecnico", ensureAuthenticated, userAuthorization(["admin"]), userController.createTechnical)
