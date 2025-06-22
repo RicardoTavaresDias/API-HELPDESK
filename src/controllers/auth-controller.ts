@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express"
+import { Request, Response } from "express"
 import { userAuth } from "../services/auth-services"
 
 export class Auth {
-  async session(request: Request, response: Response, next: NextFunction){
+  async session(request: Request, response: Response){
     try {
       const result = await userAuth(request.body)
       if(!result){
@@ -10,8 +10,8 @@ export class Auth {
       }
 
       response.status(200).json(result)
-    } catch (error){
-      next(error)
+    } catch (error: any){
+      return response.status(error.statusCode).json({ error: error.message })
     }
   }
 }
