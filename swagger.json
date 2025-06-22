@@ -21,7 +21,7 @@
         },
         "responses": {
           "200": {
-            "description": "Token JWT e dados do usuário",
+            "description": "Dados do usuário e Token JWT",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/Response Login" }
