@@ -1,10 +1,9 @@
-import { Repository } from "../repositories"
+import Repository from "../repositories"
 import { userCustomerSchema, userSchema, userTechnicalSchema } from "../schema/user.schema"
 import { AppError } from "../utils/AppError"
 import { UserRole } from "@prisma/client"
 import { hash } from "bcrypt"
 
-// ok
 export const existUser = async (email: string) => {
   const repository = new Repository()
   const resultIsUserSchema = userSchema(email)
@@ -21,7 +20,6 @@ export type UserCustomerType = {
   password: string
 }
 
-// ok
 export const createUserCustomer = async (data: UserCustomerType) => {
   const resultUserCustomerSchema = userCustomerSchema(data)
   if(!resultUserCustomerSchema.success){
@@ -46,7 +44,6 @@ export type UserTechnicalType = {
   }[]
 } & UserCustomerType
 
-//ok
 export const createUserTechnical  = async (data: UserTechnicalType) => {
   const resultUserTechnicalSchema = userTechnicalSchema(data)
   if(!resultUserTechnicalSchema.success){

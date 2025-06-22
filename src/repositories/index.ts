@@ -10,4 +10,4 @@ class Repository {
   }
 }
 
-export { Repository }
+export default Repository 

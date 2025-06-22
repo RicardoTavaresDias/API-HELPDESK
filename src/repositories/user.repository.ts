@@ -3,12 +3,10 @@ import { UserCustomerType, UserTechnicalType } from "../services/user-service";
 
 export class userRepository {
   prisma: PrismaClient;
-
   constructor(prisma: PrismaClient){
     this.prisma = prisma
   }
 
-  // ok
   async isUser(user: string){
     return await this.prisma.user.findFirst({
       where: {
@@ -25,14 +23,12 @@ export class userRepository {
     })
   }
  
-  // ok
   async createCustomer(data: UserCustomerType){
     return await this.prisma.user.create({
       data: data
     })
   }
 
-  //ok
   async createTechnical(data: UserTechnicalType){
     return await this.prisma.user.create({
       data: {

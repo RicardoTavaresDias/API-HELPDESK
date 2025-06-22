@@ -1,7 +1,6 @@
 import z from 'zod'
 import { UserCustomerType, UserTechnicalType } from '../services/user-service'
 
-//ok
 export const userSchema = (email: string) => {
   const isUserSchema = z.object({
     email: z.string({ message: "string only field" })
@@ -12,7 +11,6 @@ export const userSchema = (email: string) => {
   return isUserSchema.safeParse({ email })
 }
 
-//ok
 export const userCustomerSchema = (data: UserCustomerType) => {
   const customerSchema = z.object({
     name: z.string({ message: "string only field" })
@@ -27,7 +25,6 @@ export const userCustomerSchema = (data: UserCustomerType) => {
   return customerSchema.safeParse(data)
 }
 
-//ok
 export const userTechnicalSchema = (data: UserTechnicalType) => {
   const technicalSchema = z.object({
     name: z.string({ message: "string only field" })

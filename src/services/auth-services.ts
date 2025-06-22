@@ -1,4 +1,4 @@
-import { Repository } from "../repositories"
+import Repository from "../repositories"
 import { authUserSchema } from "../schema/auth.schema"
 import { AppError } from "../utils/AppError"
 import jwt from "jsonwebtoken";
