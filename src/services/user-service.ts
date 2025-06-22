@@ -15,9 +15,8 @@ export const existUser = async (email: string) => {
   return await repository.user.isUser(email)
 }
 
-
 export type UserCustomerType = {
-  name: string 
+  name: string
   email: string
   password: string
 }

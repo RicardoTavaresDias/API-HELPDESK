@@ -19,10 +19,10 @@ export const userAuth = async (data: authType) => {
 
   const repository = new Repository()
   const resultUser = await repository.user.isUser(data.email) as UserCustomerType
+  if(!resultUser) throw new AppError("unregistered user", 401)
+
   const passwordMatched = await compare(data.password, resultUser.password)
-  if(!passwordMatched){
-    throw new AppError("Incorrect username and password", 401)
-  }
+  if(!passwordMatched) throw new AppError("Incorrect username and password", 401)
 
   const token = userToken(resultUser as userPrismaType)
   return token
@@ -32,7 +32,7 @@ type userPrismaType = {
   id: string
   name: string
   email: string
-  password: string
+  password: string 
   role: string
   avatar: string
   createdAt: Date
