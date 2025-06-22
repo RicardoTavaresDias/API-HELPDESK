@@ -4,11 +4,11 @@ import { AppError } from "../utils/AppError"
 function userAuthorization(role: string[]){
   return (request: Request, response: Response, next: NextFunction) => {
     if(!request.user) {
-      throw new AppError("Unauthorized", 401)
+      throw new AppError("Unauthorized", 403)
     }
 
     if(!role.includes(request.user.role)){
-      throw new AppError("Unauthorized", 401) 
+      throw new AppError("Unauthorized", 403) 
     }
 
     return next()

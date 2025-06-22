@@ -5,7 +5,7 @@ export class UserController {
   async createCustomer(request: Request, response: Response){
     try {
       await createUserCustomer(request.body)
-      response.status(200).json({ message: "Registration completed successfully" })
+      response.status(201).json({ message: "Registration completed successfully" })
     } catch(error: any){
       return response.status(error.statusCode).json({ error: error.message })
     }
@@ -14,7 +14,7 @@ export class UserController {
   async createTechnical(request: Request, response: Response){
     try {
       await createUserTechnical(request.body)
-      response.status(200).json({ message: "Registration completed successfully" })
+      response.status(201).json({ message: "Registration completed successfully" })
     } catch(error: any){
       return response.status(error.statusCode).json({ error: error.message })
     }

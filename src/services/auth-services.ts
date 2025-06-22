@@ -14,12 +14,12 @@ export type authType = {
 export const userAuth = async (data: authType) => {
   const userAuthSchema = authUserSchema(data)
   if(!userAuthSchema.success){
-    throw new AppError(userAuthSchema.error.flatten().fieldErrors as string, 401)
+    throw new AppError(userAuthSchema.error.flatten().fieldErrors as string, 400)
   }
 
   const repository = new Repository()
   const resultUser = await repository.user.isUser(data.email) as UserCustomerType
-  if(!resultUser) throw new AppError("unregistered user", 401)
+  if(!resultUser) throw new AppError("unregistered user", 404)
 
   const passwordMatched = await compare(data.password, resultUser.password)
   if(!passwordMatched) throw new AppError("Incorrect username and password", 401)
