@@ -3,8 +3,11 @@ import z from "zod"
 
 export const authUserSchema = (data: authType) => {
  const userSchema = z.object({
-  email: z.string().min(1).email(),
-  password: z.string().min(4)
+    email: z.string({ message: "string only field" })
+    .min(4, { message: "fill in the field with at least 4 characters" })
+    .email({ message: "invalid email" }),
+    password: z.string({ message: "string only field" })
+    .min(6, { message: "fill in the field with at least 6 characters" })
  })
 
  return userSchema.safeParse(data)

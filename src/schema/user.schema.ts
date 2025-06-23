@@ -16,10 +16,10 @@ export const userCustomerSchema = (data: UserCustomerType) => {
     name: z.string({ message: "string only field" })
     .min(1, { message: "required field" }),
     email: z.string({ message: "string only field" })
-    .min(4, { message: "fill in the field with at least 4 characters" })
+    .min(1, { message: "required field" })
     .email({ message: "invalid email" }),
     password: z.string({ message: "string only field" })
-    .min(1, { message: "required field" })
+    .min(6, { message: "fill in the field with at least 6 characters" })
   })
 
   return customerSchema.safeParse(data)
@@ -33,7 +33,7 @@ export const userTechnicalSchema = (data: UserTechnicalType) => {
     .min(1, { message: "required field" })
     .email({ message: "invalid email" }),
     password: z.string({ message: "string only field" })
-    .min(4,{ message: "fill in the field with at least 4 characters" }),
+    .min(6,{ message: "fill in the field with at least 6 characters" }),
     role: z.enum(["technical"]),
     hours: z.array(z.object({
       startTime: z.coerce.date({ message: "invalid startTime" }),
