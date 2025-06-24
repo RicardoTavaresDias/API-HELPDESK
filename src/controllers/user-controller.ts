@@ -7,7 +7,7 @@ export class UserController {
       await createUserCustomer(request.body)
       response.status(201).json({ message: "Registration completed successfully" })
     } catch(error: any){
-      return response.status(error.statusCode).json({ error: error.message })
+      return response.status(error.statusCode).json({ message: error.message })
     }
   }
 
@@ -16,7 +16,7 @@ export class UserController {
       await createUserTechnical(request.body)
       response.status(201).json({ message: "Registration completed successfully" })
     } catch(error: any){
-      return response.status(error.statusCode).json({ error: error.message })
+      return response.status(error.statusCode).json({ message: error.message })
     }
   }
 }

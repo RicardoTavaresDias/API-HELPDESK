@@ -7,7 +7,7 @@ export class Auth {
       const result = await userAuth(request.body)
       response.status(200).json(result)
     } catch (error: any){
-      return response.status(error.statusCode).json({ error: error.message })
+      return response.status(error.statusCode).json({ message: error.message })
     }
   }
 }

@@ -24,6 +24,6 @@ export function ensureAuthenticated(request: Request, response: Response, next: 
 
     next()
   } catch(error){
-    response.status(401).json({ messsage: "Invalid JWT token" })
+    response.status(401).json({ message: "Invalid JWT token" })
   }
 }
