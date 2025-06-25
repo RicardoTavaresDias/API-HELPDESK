@@ -1,22 +1,22 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { createUserCustomer, createUserTechnical } from "../services/user-service";
 
 export class UserController {
-  async createCustomer(request: Request, response: Response){
+  async createCustomer(request: Request, response: Response, next: NextFunction){
     try {
       await createUserCustomer(request.body)
       response.status(201).json({ message: "Registration completed successfully" })
     } catch(error: any){
-      return response.status(error.statusCode).json({ message: error.message })
+      next(error)
     }
   }
 
-  async createTechnical(request: Request, response: Response){
+  async createTechnical(request: Request, response: Response, next: NextFunction){
     try {
       await createUserTechnical(request.body)
       response.status(201).json({ message: "Registration completed successfully" })
     } catch(error: any){
-      return response.status(error.statusCode).json({ message: error.message })
+      next(error)
     }
   }
 }
