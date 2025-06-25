@@ -11,7 +11,7 @@ type TokenPayload = {
 export function ensureAuthenticated(request: Request, response: Response, next: NextFunction){
   try {
     const authHeader = request.headers.authorization
-    if(!authHeader) return response.status(401).json({ message: "JWT token not found" })
+    if(!authHeader) return response.status(401).json({ message: "Token JWT não encontrado" })
 
     const token = authHeader.split(" ")[1]
     const { user }: any = verify(token, authConfig.jwt.secret) as TokenPayload
@@ -24,6 +24,6 @@ export function ensureAuthenticated(request: Request, response: Response, next: 
 
     next()
   } catch(error){
-    response.status(401).json({ message: "Invalid JWT token" })
+    response.status(401).json({ message: "Token JWT inválido" })
   }
 }

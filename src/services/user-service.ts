@@ -33,7 +33,7 @@ export const createUserCustomer = async (data: UserCustomerType) => {
     return await repository.user.createCustomer({...data, password: hashPassword})
   }
   
-  throw new AppError("user already registered", 409)
+  throw new AppError("Usuário já registrado", 409)
 }
 
 export type UserTechnicalType = {
@@ -57,5 +57,5 @@ export const createUserTechnical  = async (data: UserTechnicalType) => {
     return await respository.user.createTechnical({...data, password: hashPassword})
   }
 
-  throw new AppError("user already registered", 409)
+  throw new AppError("Usuário já registrado", 409)
 }
