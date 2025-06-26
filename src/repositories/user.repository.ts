@@ -65,8 +65,24 @@ export class userRepository {
     })
   }
 
-  // Verificar a possibilidade de realizar update tambem na tabela userHours se tiver dados para atualizar
   async update({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType}){
+    const { hours, ...rest } = dataUpdate
+
+    if(hours){
+      return await this.prisma.user.update({
+        where: {
+          id: id
+        },
+        data: {
+          ...rest,
+          userHours: {
+            deleteMany: {},
+            create: hours
+          }
+        }
+      })
+    }
+
     return await this.prisma.user.update({
       where: {
         id: id

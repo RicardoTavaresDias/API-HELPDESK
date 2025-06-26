@@ -56,10 +56,14 @@ export type UpdateUserType = {
   email?: string
   password?: string
   avatar?: string
+  hours?: {
+    startTime: Date
+    endTime: Date
+  }[]
 } 
 
 export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType }) => {
-  const newSchema = userSchema.partial()
+  const newSchema = technicalSchema.partial()
   const user = newSchema.safeParse(dataUpdate)
   if(!user.success){
     throw new AppError(user.error.issues[0].message , 400)

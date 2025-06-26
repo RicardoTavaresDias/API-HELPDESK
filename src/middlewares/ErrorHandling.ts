@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 import { AppError } from "../utils/AppError";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export function ErrorHandling(error: any, request: Request, response: Response, next: NextFunction) {
   if(error instanceof AppError){
@@ -10,6 +11,11 @@ export function ErrorHandling(error: any, request: Request, response: Response, 
 
   if(error instanceof ZodError){
     response.status(400).json({ message: "validation error",  issues: error.format() })
+    return
+  }
+
+  if(error instanceof PrismaClientKnownRequestError){
+    response.status(400).json({ message: error.meta })
     return
   }
 

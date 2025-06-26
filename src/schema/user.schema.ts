@@ -35,7 +35,8 @@ export const technicalSchema = z.object({
   hours: z.array(z.object({
     startTime: z.coerce.date({ message: "startTime Inválido" }),
     endTime: z.coerce.date({ message: "endTime Inválido" })
-  })).min(1, { message: "Deve ter pelo menos um cronograma" })
+  }))
+  .min(1, { message: "Deve ter pelo menos um cronograma" })
 })
 export type TechnicalSchemaType = z.infer<typeof technicalSchema>
 

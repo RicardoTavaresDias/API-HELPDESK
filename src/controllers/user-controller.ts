@@ -32,15 +32,47 @@ export class UserController {
     }
   }
 
+  /**
+   * 
+   * const [form, setForm] = useState({
+      name: 'Jussara',
+      email: 'jussara@email.com',
+      password: '123456',
+      role: 'technical',
+      hours: [
+        {
+          startTime: "2025-06-21T17:08:00.003Z",
+          endTime: "2025-06-21T17:12:00.003Z"
+        },
+        {
+          startTime: "2025-06-21T17:14:00.003Z",
+          endTime: "2025-06-21T17:18:00.003Z"
+        }
+      ]
+    });
+   * 
+   * Envia o JSON como campo de texto (igual no Insomnia)
+   * formData.append("data", JSON.stringify(form)); <= passando objeto para body
+   * 
+   * formData.append("file", avatarFile)
+   * 
+   * const response = await fetch("http://localhost:3333/user", {
+        method: "PATH",
+        body: formData,
+      });
+   *
+   *   
+   */
+
   async update(request: Request, response: Response, next: NextFunction) {
     try {
       if(!Object.keys(request.body).length){
         return response.status(401).json({ message: "Não há dados para atualizar." })
       }
 
-      const dataUpdate = request.body
+      const dataUpdate = JSON.parse(request.body.data)
       const idUser = request.params.id
-      
+
       const data = request.file ? { ...dataUpdate, avatar: request.file.filename } : dataUpdate
       await updateUser({ id: idUser, dataUpdate: data})
       response.status(200).json({ message: "Dados atualizado com sucesso" })
