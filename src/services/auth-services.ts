@@ -22,7 +22,7 @@ export const userAuth = async (data: authType) => {
   if(!resultUser) throw new AppError("Usuário não registrado", 404)
 
   const passwordMatched = await compare(data.password, resultUser.password)
-  if(!passwordMatched) throw new AppError("Email do usuário e senha incorretos", 401)
+  if(!passwordMatched) throw new AppError("E-mail ou senha incorretos.", 401)
 
   const token = userToken(resultUser as userPrismaType)
   return token
