@@ -15,7 +15,15 @@ export const userCustomerSchema = (data: UserCustomerType) => {
   const customerSchema = z.object({
     name: z.string({ message: "Campo somente string" })
     .min(1, { message: "Campo obrigatório" })
-    .regex(/^[a-zA-Z\s]*$/, { message: "Campo nome deve conter apenas letras e espaços." }),
+    .regex(/^[a-zA-Z\s]*$/, { message: "Campo nome deve conter apenas letras e espaços." })
+    .transform((name) => {
+      return name
+        .trim()
+        .split(" ")
+        .map((word) => {
+          return word[0].toUpperCase().concat(word.substring(1));
+        }).join(" ")
+    }),
     email: z.string({ message: "Campo somente string" })
     .min(1, { message: "Campo obrigatório" })
     .email({ message: "E-mail inválido" }),
@@ -30,7 +38,15 @@ export const userTechnicalSchema = (data: UserTechnicalType) => {
   const technicalSchema = z.object({
     name: z.string({ message: "Campo somente string" })
     .min(1,{ message: "Campo obrigatório" })
-    .regex(/^[a-zA-Z\s]*$/, { message: "Campo nome deve conter apenas letras e espaços." }),
+    .regex(/^[a-zA-Z\s]*$/, { message: "Campo nome deve conter apenas letras e espaços." })
+    .transform((name) => {
+      return name
+        .trim()
+        .split(" ")
+        .map((word) => {
+          return word[0].toUpperCase().concat(word.substring(1));
+        }).join(" ")
+    }),
     email: z.string({ message: "Campo somente string" })
     .min(1, { message: "Campo obrigatório" })
     .email({ message: "E-mail inválido" }),

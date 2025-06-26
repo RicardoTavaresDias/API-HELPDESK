@@ -6,12 +6,12 @@ import { hash } from "bcrypt"
 
 export const existUser = async (email: string) => {
   const repository = new Repository()
-  const resultIsUserSchema = userSchema(email)
-  if(!resultIsUserSchema.success){
-    throw new AppError(resultIsUserSchema.error.issues[0].message, 400)
+  const isUser = userSchema(email)
+  if(!isUser.success){
+    throw new AppError(isUser.error.issues[0].message, 400)
   }
 
-  return await repository.user.isUser(email)
+  return await repository.user.isUser(isUser.data.email)
 }
 
 export type UserCustomerType = {
@@ -21,16 +21,16 @@ export type UserCustomerType = {
 }
 
 export const createUserCustomer = async (data: UserCustomerType) => {
-  const resultUserCustomerSchema = userCustomerSchema(data)
-  if(!resultUserCustomerSchema.success){
-    throw new AppError(resultUserCustomerSchema.error.issues[0].message, 400)
+  const userCustomer = userCustomerSchema(data)
+  if(!userCustomer.success){
+    throw new AppError(userCustomer.error.issues[0].message, 400)
   }
 
-  const userExist = await existUser(data.email)
+  const userExist = await existUser(userCustomer.data.email)
   if(!userExist){
     const repository = new Repository()
-    const hashPassword =  await hash(data.password, 12)
-    return await repository.user.createCustomer({...data, password: hashPassword})
+    const hashPassword =  await hash(userCustomer.data.password, 12)
+    return await repository.user.createCustomer({...userCustomer.data, password: hashPassword})
   }
   
   throw new AppError("Usuário já registrado", 409)
@@ -45,16 +45,16 @@ export type UserTechnicalType = {
 } & UserCustomerType
 
 export const createUserTechnical  = async (data: UserTechnicalType) => {
-  const resultUserTechnicalSchema = userTechnicalSchema(data)
-  if(!resultUserTechnicalSchema.success){
-    throw new AppError(resultUserTechnicalSchema.error.issues[0].message , 400)
+  const userTechnical = userTechnicalSchema(data)
+  if(!userTechnical.success){
+    throw new AppError(userTechnical.error.issues[0].message , 400)
   }
 
-  const userExist = await existUser(data.email)
+  const userExist = await existUser(userTechnical.data.email)
   if(!userExist){
     const respository = new Repository()
-    const hashPassword =  await hash(data.password, 12)
-    return await respository.user.createTechnical({...data, password: hashPassword})
+    const hashPassword =  await hash(userTechnical.data.password, 12)
+    return await respository.user.createTechnical({...userTechnical.data, password: hashPassword})
   }
 
   throw new AppError("Usuário já registrado", 409)
