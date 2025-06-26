@@ -1,10 +1,10 @@
 import Repository from "../repositories"
 import { authUserSchema } from "../schema/auth.schema"
+import type { UserTokenReturn } from "../types/token"
 import { AppError } from "../utils/AppError"
 import jwt from "jsonwebtoken";
 import { authConfig } from "../config/jwt";
 import { compare } from "bcrypt"
-import { UserCustomerType } from "./user-service";
 
 export type authType = {
   email: string
@@ -12,19 +12,19 @@ export type authType = {
 }
 
 export const userAuth = async (data: authType) => {
-  const userAuth = authUserSchema(data)
+  const userAuth = authUserSchema.safeParse(data)
   if(!userAuth.success){
-    throw new AppError(userAuth.error.flatten().fieldErrors as string, 400)
+    throw new AppError(userAuth.error.issues[0].message , 400)
   }
 
   const repository = new Repository()
-  const resultUser = await repository.user.isUser(userAuth.data.email) as UserCustomerType
+  const resultUser = await repository.user.isUser({ userEmail: userAuth.data.email })
   if(!resultUser) throw new AppError("Usuário não registrado", 404)
 
   const passwordMatched = await compare(userAuth.data.password, resultUser.password)
   if(!passwordMatched) throw new AppError("E-mail ou senha incorretos.", 401)
 
-  const token = userToken(resultUser as userPrismaType)
+  const token = userToken(resultUser as any)
   return token
 }
 
@@ -40,7 +40,8 @@ type userPrismaType = {
   userHours?: [{startTime: Date, endTime: Date}][]
 } 
 
-const userToken = (data: userPrismaType) => {
+
+const userToken = (data: userPrismaType): UserTokenReturn => {
   const { password, ...rest } = data
   const { secret, expiresIn } = authConfig.jwt
 

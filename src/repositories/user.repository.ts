@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { UserCustomerType, UserTechnicalType } from "../services/user-service";
+import { UserSchematype, TechnicalSchemaType } from "../schema/user.schema"
+import type { UpdateUserType } from "../services/user-service"
 
 export class userRepository {
   prisma: PrismaClient;
@@ -7,10 +8,11 @@ export class userRepository {
     this.prisma = prisma
   }
 
-  async isUser(user: string){
+  async isUser({ userEmail, id }: { userEmail?: string, id?: string }){
     return await this.prisma.user.findFirst({
       where: {
-        email: user
+        email: userEmail && userEmail,
+        id: id && id
       },
       include: {
         userHours: {
@@ -23,13 +25,13 @@ export class userRepository {
     })
   }
  
-  async createCustomer(data: UserCustomerType){
+  async createCustomer(data: UserSchematype){
     return await this.prisma.user.create({
       data: data
     })
   }
 
-  async createTechnical(data: UserTechnicalType){
+  async createTechnical(data: TechnicalSchemaType){
     return await this.prisma.user.create({
       data: {
         name: data.name,
@@ -47,5 +49,45 @@ export class userRepository {
         userHours: true
       }
     })
+  }
+
+  async indexAll(){
+    return await this.prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+        userHours: true
+      }
+    })
+  }
+
+  // Verificar a possibilidade de realizar update tambem na tabela userHours se tiver dados para atualizar
+  async update({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType}){
+    return await this.prisma.user.update({
+      where: {
+        id: id
+      },
+      data: dataUpdate
+    })
+  }
+
+  async remove(id: string){
+    const deleteUserHours = this.prisma.userHours.deleteMany({
+      where: {
+        fkUserTechnical: id
+      }
+    })
+
+    const deleteUser = this.prisma.user.delete({
+      where: {
+        id: id
+      }
+    })
+
+    return await this.prisma.$transaction([deleteUserHours, deleteUser])
   }
 }
