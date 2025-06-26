@@ -14,7 +14,8 @@ export const userSchema = (email: string) => {
 export const userCustomerSchema = (data: UserCustomerType) => {
   const customerSchema = z.object({
     name: z.string({ message: "Campo somente string" })
-    .min(1, { message: "Campo obrigatório" }),
+    .min(1, { message: "Campo obrigatório" })
+    .regex(/^[a-zA-Z\s]*$/, { message: "Campo nome deve conter apenas letras e espaços." }),
     email: z.string({ message: "Campo somente string" })
     .min(1, { message: "Campo obrigatório" })
     .email({ message: "E-mail inválido" }),
@@ -28,7 +29,8 @@ export const userCustomerSchema = (data: UserCustomerType) => {
 export const userTechnicalSchema = (data: UserTechnicalType) => {
   const technicalSchema = z.object({
     name: z.string({ message: "Campo somente string" })
-    .min(1,{ message: "Campo obrigatório" }),
+    .min(1,{ message: "Campo obrigatório" })
+    .regex(/^[a-zA-Z\s]*$/, { message: "Campo nome deve conter apenas letras e espaços." }),
     email: z.string({ message: "Campo somente string" })
     .min(1, { message: "Campo obrigatório" })
     .email({ message: "E-mail inválido" }),

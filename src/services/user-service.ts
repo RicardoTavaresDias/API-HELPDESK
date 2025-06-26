@@ -8,7 +8,7 @@ export const existUser = async (email: string) => {
   const repository = new Repository()
   const resultIsUserSchema = userSchema(email)
   if(!resultIsUserSchema.success){
-    throw new AppError(resultIsUserSchema.error.flatten().fieldErrors as string, 400)
+    throw new AppError(resultIsUserSchema.error.issues[0].message, 400)
   }
 
   return await repository.user.isUser(email)
@@ -23,7 +23,7 @@ export type UserCustomerType = {
 export const createUserCustomer = async (data: UserCustomerType) => {
   const resultUserCustomerSchema = userCustomerSchema(data)
   if(!resultUserCustomerSchema.success){
-    throw new AppError(resultUserCustomerSchema.error.flatten().fieldErrors as string, 400)
+    throw new AppError(resultUserCustomerSchema.error.issues[0].message, 400)
   }
 
   const userExist = await existUser(data.email)
@@ -47,7 +47,7 @@ export type UserTechnicalType = {
 export const createUserTechnical  = async (data: UserTechnicalType) => {
   const resultUserTechnicalSchema = userTechnicalSchema(data)
   if(!resultUserTechnicalSchema.success){
-    throw new AppError(resultUserTechnicalSchema.error.flatten().fieldErrors as string, 400)
+    throw new AppError(resultUserTechnicalSchema.error.issues[0].message , 400)
   }
 
   const userExist = await existUser(data.email)
