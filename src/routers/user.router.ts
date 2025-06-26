@@ -9,7 +9,9 @@ const userController = new UserController()
 export const userRouter = Router()
 
 userRouter.post("/customer", userController.createCustomer)
-userRouter.post("/technical", ensureAuthenticated, userAuthorization(["admin"]), userController.createTechnical)
-userRouter.get("/", userController.index)
+
+userRouter.use(ensureAuthenticated)
+userRouter.post("/technical", userAuthorization(["admin"]), userController.createTechnical)
+userRouter.get("/", userAuthorization(["admin"]), userController.index)
 userRouter.patch("/:id", upload.single('file'), userController.update)
-userRouter.delete("/:id", userController.remove)
+userRouter.delete("/:id", userAuthorization(["admin", "customer"]), userController.remove)
