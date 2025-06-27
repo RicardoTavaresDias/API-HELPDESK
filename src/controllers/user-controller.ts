@@ -21,9 +21,16 @@ export class UserController {
   }
 
   async index(request: Request, response: Response, next: NextFunction) {
+    const { page, limit } = request.query
+    if(!page || !Number(page) || (!limit || !Number(limit))){
+      return response.status(400).json({ 
+        message: "'page' e 'limit' são obrigatórios e devem ser números inteiros válidos na query string." 
+      })
+    } 
+
     try {
-      const users = await listAll()
-      if(!users.length){
+      const users = await listAll({ page: Number(page), limit: Number(limit) })
+      if(!users.usersAll){
         return response.status(404).json({ message: "Usuários não encontrado." })
       }
       response.status(200).json(users)

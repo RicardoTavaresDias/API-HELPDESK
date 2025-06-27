@@ -2,6 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { UserSchematype, TechnicalSchemaType } from "../schema/user.schema"
 import type { UpdateUserType } from "../services/user-service"
 
+import { pagination } from "../libs/pagination"
+import { skip } from "@prisma/client/runtime/library";
+
 export class userRepository {
   prisma: PrismaClient;
   constructor(prisma: PrismaClient){
@@ -51,7 +54,7 @@ export class userRepository {
     })
   }
 
-  async indexAll(){
+  async indexAll({ skip, take }: { skip: number, take: number}){
     return await this.prisma.user.findMany({
       select: {
         id: true,
@@ -61,8 +64,17 @@ export class userRepository {
         createdAt: true,
         updatedAt: true,
         userHours: true
+      },
+      skip: skip,
+      take: take,
+      orderBy: {
+        name: "desc"
       }
-    })
+    })  
+  }
+
+  async coutUser(){
+    return await this.prisma.user.count()
   }
 
   async update({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType}){
