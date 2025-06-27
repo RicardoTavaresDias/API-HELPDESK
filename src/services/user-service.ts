@@ -77,6 +77,10 @@ export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: U
   }
 
   const respository = new Repository()
+  
+  const existUser = await respository.user.isUser({ id })
+  if(!existUser) throw new AppError("Usuários não encontrado.", 404)
+  
   return await respository.user.update({ id, dataUpdate: dataUser })
 }
 

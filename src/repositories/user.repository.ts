@@ -68,7 +68,7 @@ export class userRepository {
   async update({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType}){
     const { hours, ...rest } = dataUpdate
 
-    if(hours){
+    if(hours?.length){
       return await this.prisma.user.update({
         where: {
           id: id
