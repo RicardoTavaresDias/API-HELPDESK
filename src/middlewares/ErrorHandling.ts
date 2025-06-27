@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 import { AppError } from "../utils/AppError";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { errorPrisma } from "../utils/prismaError"
 
 export function ErrorHandling(error: any, request: Request, response: Response, next: NextFunction) {
   if(error instanceof AppError){
@@ -15,7 +16,12 @@ export function ErrorHandling(error: any, request: Request, response: Response, 
   }
 
   if(error instanceof PrismaClientKnownRequestError){
-    response.status(400).json({ message: error.meta })
+    const [ err ] = errorPrisma.filter(value => value.code === error.code)
+    if(!err){
+      return response.status(400).json({ message: error.meta })
+    } 
+
+    response.status(err.startCode).json({ message: err.message, error: error.meta })
     return
   }
 
