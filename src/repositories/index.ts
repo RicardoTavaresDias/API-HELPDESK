@@ -1,12 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-import { userRepository } from "./user.repository"; 
+import { UserRepository } from "./user.repository"; 
+import { ServicesRepository } from "./services.repository"
 
 class Repository {
   prisma = new PrismaClient()
-  user: userRepository;
+  user: UserRepository
+  services: ServicesRepository
 
   constructor(){
-    this.user = new userRepository(this.prisma)
+    this.user = new UserRepository(this.prisma)
+    this.services = new ServicesRepository(this.prisma)
   }
 }
 

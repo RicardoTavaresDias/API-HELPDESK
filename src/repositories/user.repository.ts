@@ -2,10 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { UserSchematype, TechnicalSchemaType } from "../schema/user.schema"
 import type { UpdateUserType } from "../services/user-service"
 
-import { pagination } from "../libs/pagination"
-import { skip } from "@prisma/client/runtime/library";
-
-export class userRepository {
+export class UserRepository {
   prisma: PrismaClient;
   constructor(prisma: PrismaClient){
     this.prisma = prisma
