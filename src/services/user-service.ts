@@ -91,6 +91,10 @@ export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: U
   const existUser = await repository.user.isUser({ id })
   if(!existUser) throw new AppError("Usuários não encontrado.", 404)
   
+  if(existUser.role === "customer" && user.data.hours){
+    throw new AppError("Clientes não possuem horas de atendimento associadas.", 403)
+  }
+  
   return await repository.user.update({ id, dataUpdate: dataUser })
 }
 

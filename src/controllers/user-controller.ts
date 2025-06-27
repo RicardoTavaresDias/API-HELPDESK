@@ -73,11 +73,11 @@ export class UserController {
 
   async update(request: Request, response: Response, next: NextFunction) {
     try {
-      if(!Object.keys(request.body).length){
+      if(!Object.keys(request.body).length && !request.file){
         return response.status(401).json({ message: "Não há dados para atualizar." })
       }
 
-      const dataUpdate = JSON.parse(request.body.data)
+      const dataUpdate = request.body.data && JSON.parse(request.body.data)
       const idUser = request.params.id
 
       const data = request.file ? { ...dataUpdate, avatar: request.file.filename } : dataUpdate
