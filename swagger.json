@@ -115,7 +115,9 @@
               }
             }
           },
-          "400": { "description": "Parâmetros de query inválidos (page ou limit)." },
+          "400": {
+            "description": "Parâmetros de query inválidos (page ou limit)."
+          },
           "403": { "description": "Acesso negado (não é admin)." },
           "404": { "description": "Usuários não encontrados." },
           "401": { "description": "Não autenticado." }
@@ -152,7 +154,9 @@
         "responses": {
           "200": { "description": "Dados atualizado com sucesso." },
           "400": { "description": "Dados inválidos." },
-          "401": { "description": "Não há dados para atualizar / Não autenticado." },
+          "401": {
+            "description": "Não há dados para atualizar / Não autenticado."
+          },
           "403": { "description": "Acesso negado." },
           "404": { "description": "Usuário não encontrado." }
         }
@@ -177,9 +181,44 @@
         ],
         "responses": {
           "200": { "description": "Usuário excluído com sucesso." },
-          "401": { "description": "Informe o ID do usuário / Não autenticado." },
+          "401": {
+            "description": "Informe o ID do usuário / Não autenticado."
+          },
           "403": { "description": "Acesso negado." },
           "404": { "description": "Usuário não encontrado." }
+        }
+      }
+    },
+    "/user/avatar/{filename}": {
+      "get": {
+        "summary": "Servir avatar do usuário",
+        "description": "Retorna a imagem de avatar do usuário a partir do nome do arquivo. A rota serve arquivos estáticos da pasta de upload.",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "description": "Nome do arquivo de imagem (por exemplo, 'default.svg').",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "default.svg"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Arquivo de imagem retornado com sucesso.",
+            "content": {
+              "image/png": {},
+              "image/jpeg": {},
+              "image/svg+xml": {}
+            }
+          },
+          "404": {
+            "description": "Arquivo não encontrado."
+          }
         }
       }
     },
@@ -250,11 +289,15 @@
             "description": "Lista de serviços retornada com sucesso.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/List Services Response" }
+                "schema": {
+                  "$ref": "#/components/schemas/List Services Response"
+                }
               }
             }
           },
-          "400": { "description": "Parâmetros de query inválidos (page, limit ou status)." },
+          "400": {
+            "description": "Parâmetros de query inválidos (page, limit ou status)."
+          },
           "403": { "description": "Acesso negado." },
           "401": { "description": "Não autenticado." }
         }
@@ -290,7 +333,9 @@
         "responses": {
           "200": { "description": "Dados atualizados com sucesso." },
           "400": { "description": "Dados inválidos." },
-          "401": { "description": "Não há dados para atualizar / Não autenticado." },
+          "401": {
+            "description": "Não há dados para atualizar / Não autenticado."
+          },
           "403": { "description": "Acesso negado." },
           "404": { "description": "Serviço não encontrado." }
         }
@@ -313,24 +358,46 @@
           "user": {
             "type": "object",
             "properties": {
-              "id": { "type": "string", "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3" },
+              "id": {
+                "type": "string",
+                "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
+              },
               "name": { "type": "string", "example": "Mateus" },
               "email": { "type": "string", "example": "mateus@email.com" },
               "role": { "type": "string", "example": "technical" },
               "avatar": { "type": "string", "example": "default.svg" },
-              "createdAt": { "type": "string", "format": "date-time", "example": "2025-06-21T17:47:45.345Z" },
-              "updatedAt": { "type": "string", "format": "date-time", "example": "2025-06-21T22:41:05.771Z" },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-06-21T17:47:45.345Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-06-21T22:41:05.771Z"
+              },
               "userHours": {
                 "type": "array",
                 "items": {
                   "type": "object",
                   "properties": {
-                    "startTime": { "type": "string", "format": "date-time", "example": "2025-06-21T17:08:00.003Z" },
-                    "endTime": { "type": "string", "format": "date-time", "example": "2025-06-21T17:18:00.003Z" }
+                    "startTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-06-21T17:08:00.003Z"
+                    },
+                    "endTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-06-21T17:18:00.003Z"
+                    }
                   }
                 }
               },
-              "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" }
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+              }
             }
           }
         }
@@ -351,7 +418,11 @@
           "name": { "type": "string", "example": "Maria Oliveira" },
           "email": { "type": "string", "example": "maria@email.com" },
           "password": { "type": "string", "example": "123456" },
-          "role": { "type": "string", "enum": ["technical"], "example": "technical" },
+          "role": {
+            "type": "string",
+            "enum": ["technical"],
+            "example": "technical"
+          },
           "hours": {
             "type": "array",
             "items": {
@@ -389,13 +460,24 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "string", "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3" },
+                "id": {
+                  "type": "string",
+                  "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
+                },
                 "name": { "type": "string", "example": "Mateus" },
                 "email": { "type": "string", "example": "mateus@email.com" },
                 "role": { "type": "string", "example": "technical" },
                 "avatar": { "type": "string", "example": "default.svg" },
-                "createdAt": { "type": "string", "format": "date-time", "example": "2025-06-21T17:47:45.345Z" },
-                "updatedAt": { "type": "string", "format": "date-time", "example": "2025-06-21T22:41:05.771Z" }
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-06-21T17:47:45.345Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-06-21T22:41:05.771Z"
+                }
               }
             }
           }
@@ -407,14 +489,26 @@
           "name": { "type": "string", "example": "Jussara Silva" },
           "email": { "type": "string", "example": "jussara@email.com" },
           "password": { "type": "string", "example": "newpassword123" },
-          "role": { "type": "string", "enum": ["customer", "technical", "admin"], "example": "technical" },
+          "role": {
+            "type": "string",
+            "enum": ["customer", "technical", "admin"],
+            "example": "technical"
+          },
           "hours": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "startTime": { "type": "string", "format": "date-time", "example": "2025-06-21T17:08:00.003Z" },
-                "endTime": { "type": "string", "format": "date-time", "example": "2025-06-21T17:12:00.003Z" }
+                "startTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-06-21T17:08:00.003Z"
+                },
+                "endTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-06-21T17:12:00.003Z"
+                }
               }
             },
             "minItems": 0
@@ -453,7 +547,11 @@
         "required": ["title", "value"],
         "properties": {
           "title": { "type": "string", "example": "Reparo de Computador" },
-          "value": { "type": "string", "example": "150,00", "description": "Valor do serviço no formato string com vírgula para decimal." }
+          "value": {
+            "type": "string",
+            "example": "150,00",
+            "description": "Valor do serviço no formato string com vírgula para decimal."
+          }
         }
       },
       "List Services Response": {
@@ -472,12 +570,35 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "string", "format": "uuid", "example": "b1a2c3d4-e5f6-7890-1234-56789abcdef0" },
-                "title": { "type": "string", "example": "Reparo de Computador" },
-                "value": { "type": "number", "format": "float", "example": 150.00 },
-                "status": { "type": "string", "enum": ["active", "inactive"], "example": "active" },
-                "createdAt": { "type": "string", "format": "date-time", "example": "2025-06-27T10:00:00Z" },
-                "updatedAt": { "type": "string", "format": "date-time", "example": "2025-06-27T10:00:00Z" }
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "b1a2c3d4-e5f6-7890-1234-56789abcdef0"
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Reparo de Computador"
+                },
+                "value": {
+                  "type": "number",
+                  "format": "float",
+                  "example": 150.0
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["active", "inactive"],
+                  "example": "active"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-06-27T10:00:00Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-06-27T10:00:00Z"
+                }
               }
             }
           }
@@ -487,8 +608,16 @@
         "type": "object",
         "properties": {
           "title": { "type": "string", "example": "Instalação de Software" },
-          "value": { "type": "string", "example": "75,50", "description": "Valor do serviço no formato string com vírgula para decimal." },
-          "status": { "type": "string", "enum": ["active", "inactive"], "example": "inactive" }
+          "value": {
+            "type": "string",
+            "example": "75,50",
+            "description": "Valor do serviço no formato string com vírgula para decimal."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive"],
+            "example": "inactive"
+          }
         }
       }
     },

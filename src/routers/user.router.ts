@@ -1,4 +1,5 @@
 import { Router } from "express";
+import express from "express"
 import { UserController } from "../controllers/user-controller";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { userAuthorization } from "../middlewares/userAuthorization";
@@ -15,3 +16,5 @@ userRouter.post("/technical", userAuthorization(["admin"]), userController.creat
 userRouter.get("/", userAuthorization(["admin"]), userController.index)
 userRouter.patch("/:id", upload.single('file'), userController.update)
 userRouter.delete("/:id", userAuthorization(["admin", "customer"]), userController.remove)
+
+userRouter.use("/avatar", express.static("./upload"))
