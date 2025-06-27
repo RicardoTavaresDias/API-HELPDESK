@@ -8,7 +8,7 @@
   "paths": {
     "/": {
       "post": {
-        "description": "Dados necessario para relização do login.",
+        "description": "Dados necessário para relização do login.",
         "summary": "Login",
         "tags": ["Auth"],
         "requestBody": {
@@ -34,10 +34,9 @@
         }
       }
     },
-
     "/user/cliente": {
       "post": {
-        "description": "Dados necessario para cadastro de um novo Cliente no sistema.",
+        "description": "Dados necessário para cadastro de um novo Cliente no sistema.",
         "summary": "Criar cliente",
         "tags": ["Users"],
         "requestBody": {
@@ -55,10 +54,9 @@
         }
       }
     },
-
     "/user/tecnico": {
       "post": {
-        "description": "Dados necessario para cadastro de um novo Técnico no sistema, somente admin pode realizar o cadastro.",
+        "description": "Dados necessário para cadastro de um novo Técnico no sistema, somente admin pode realizar o cadastro.",
         "summary": "Criar técnico (admin)",
         "tags": ["Users"],
         "security": [{ "bearerAuth": [] }],
@@ -75,6 +73,226 @@
           "400": { "description": "Dados inválidos" },
           "403": { "description": "Acesso negado" },
           "409": { "description": "Usuário já existe" }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "description": "Lista todos os usuários registrados no sistema com paginação. Somente administradores têm acesso.",
+        "summary": "Listar usuários (admin)",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página para a listagem.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Número de itens por página.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/List Users Response" }
+              }
+            }
+          },
+          "400": { "description": "Parâmetros de query inválidos (page ou limit)." },
+          "403": { "description": "Acesso negado (não é admin)." },
+          "404": { "description": "Usuários não encontrados." },
+          "401": { "description": "Não autenticado." }
+        }
+      }
+    },
+    "/user/{id}": {
+      "patch": {
+        "description": "Atualiza os dados de um usuário existente, incluindo a possibilidade de enviar um novo avatar. Protegido por autenticação JWT.",
+        "summary": "Atualizar usuário",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário a ser atualizado.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": { "$ref": "#/components/schemas/Update User" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Dados atualizado com sucesso." },
+          "400": { "description": "Dados inválidos." },
+          "401": { "description": "Não há dados para atualizar / Não autenticado." },
+          "403": { "description": "Acesso negado." },
+          "404": { "description": "Usuário não encontrado." }
+        }
+      },
+      "delete": {
+        "description": "Remove um usuário do sistema. Somente administradores ou o próprio cliente podem remover o usuário.",
+        "summary": "Remover usuário (admin/cliente)",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário a ser removido.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Usuário excluído com sucesso." },
+          "401": { "description": "Informe o ID do usuário / Não autenticado." },
+          "403": { "description": "Acesso negado." },
+          "404": { "description": "Usuário não encontrado." }
+        }
+      }
+    },
+    "/services": {
+      "post": {
+        "description": "Cria um novo serviço no sistema. Somente administradores podem realizar o cadastro.",
+        "summary": "Criar serviço (admin)",
+        "tags": ["Services"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Create Service" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Serviço cadastrado com sucesso." },
+          "400": { "description": "Dados inválidos." },
+          "403": { "description": "Acesso negado." },
+          "409": { "description": "Já existe um serviço com esse título." },
+          "401": { "description": "Não autenticado." }
+        }
+      },
+      "get": {
+        "description": "Lista todos os serviços registrados no sistema com paginação. Administradores e técnicos têm acesso.",
+        "summary": "Listar serviços (admin/technical)",
+        "tags": ["Services"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página para a listagem.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Número de itens por página.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 10
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filtra serviços por status (ativo/inativo).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["active", "inactive"],
+              "example": "active"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de serviços retornada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/List Services Response" }
+              }
+            }
+          },
+          "400": { "description": "Parâmetros de query inválidos (page, limit ou status)." },
+          "403": { "description": "Acesso negado." },
+          "401": { "description": "Não autenticado." }
+        }
+      }
+    },
+    "/services/{id}": {
+      "patch": {
+        "description": "Atualiza os dados de um serviço existente. Somente administradores podem realizar a atualização.",
+        "summary": "Atualizar serviço (admin)",
+        "tags": ["Services"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do serviço a ser atualizado.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "b1a2c3d4-e5f6-7890-1234-56789abcdef0"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Update Service" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Dados atualizados com sucesso." },
+          "400": { "description": "Dados inválidos." },
+          "401": { "description": "Não há dados para atualizar / Não autenticado." },
+          "403": { "description": "Acesso negado." },
+          "404": { "description": "Serviço não encontrado." }
         }
       }
     }
@@ -95,29 +313,28 @@
           "user": {
             "type": "object",
             "properties": {
-              "id": { "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3" },
-              "name": { "example": "Mateus" },
-              "email": { "example": "mateus@email.com" },
-              "role": { "example": "technical" },
-              "avatar": { "example": "default.svg" },
-              "createdAt": { "example": "2025-06-21T17:47:45.345Z" },
-              "updatedAt": { "example": "2025-06-21T22:41:05.771Z" },
+              "id": { "type": "string", "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3" },
+              "name": { "type": "string", "example": "Mateus" },
+              "email": { "type": "string", "example": "mateus@email.com" },
+              "role": { "type": "string", "example": "technical" },
+              "avatar": { "type": "string", "example": "default.svg" },
+              "createdAt": { "type": "string", "format": "date-time", "example": "2025-06-21T17:47:45.345Z" },
+              "updatedAt": { "type": "string", "format": "date-time", "example": "2025-06-21T22:41:05.771Z" },
               "userHours": {
                 "type": "array",
                 "items": {
                   "type": "object",
                   "properties": {
-                    "startTime": { "example": "2025-06-21T17:08:00.003Z" },
-                    "endTime": { "example": "2025-06-21T17:18:00.003Z" }
+                    "startTime": { "type": "string", "format": "date-time", "example": "2025-06-21T17:08:00.003Z" },
+                    "endTime": { "type": "string", "format": "date-time", "example": "2025-06-21T17:18:00.003Z" }
                   }
                 }
               },
-              "token": { "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" }
+              "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" }
             }
           }
         }
       },
-
       "Create User Customer": {
         "type": "object",
         "required": ["name", "email", "password"],
@@ -134,7 +351,7 @@
           "name": { "type": "string", "example": "Maria Oliveira" },
           "email": { "type": "string", "example": "maria@email.com" },
           "password": { "type": "string", "example": "123456" },
-          "role": { "type": "string", "example": "technical" },
+          "role": { "type": "string", "enum": ["technical"], "example": "technical" },
           "hours": {
             "type": "array",
             "items": {
@@ -142,21 +359,148 @@
               "properties": {
                 "startTime": {
                   "type": "string",
+                  "format": "date-time",
                   "example": "2025-06-22T08:00:00Z"
                 },
                 "endTime": {
                   "type": "string",
+                  "format": "date-time",
                   "example": "2025-06-22T17:00:00Z"
                 }
               }
+            },
+            "minItems": 1
+          }
+        }
+      },
+      "List Users Response": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "properties": {
+              "totalItems": { "type": "integer", "example": 25 },
+              "totalPages": { "type": "integer", "example": 3 },
+              "currentPage": { "type": "integer", "example": 1 },
+              "pageSize": { "type": "integer", "example": 10 },
+              "hasNextPage": { "type": "boolean", "example": true },
+              "hasPrevPage": { "type": "boolean", "example": false }
+            }
+          },
+          "usersAll": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string", "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3" },
+                "name": { "type": "string", "example": "Mateus" },
+                "email": { "type": "string", "example": "mateus@email.com" },
+                "role": { "type": "string", "example": "technical" },
+                "avatar": { "type": "string", "example": "default.svg" },
+                "createdAt": { "type": "string", "format": "date-time", "example": "2025-06-21T17:47:45.345Z" },
+                "updatedAt": { "type": "string", "format": "date-time", "example": "2025-06-21T22:41:05.771Z" }
+              }
             }
           }
+        }
+      },
+      "Update User Data": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "Jussara Silva" },
+          "email": { "type": "string", "example": "jussara@email.com" },
+          "password": { "type": "string", "example": "newpassword123" },
+          "role": { "type": "string", "enum": ["customer", "technical", "admin"], "example": "technical" },
+          "hours": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "startTime": { "type": "string", "format": "date-time", "example": "2025-06-21T17:08:00.003Z" },
+                "endTime": { "type": "string", "format": "date-time", "example": "2025-06-21T17:12:00.003Z" }
+              }
+            },
+            "minItems": 0
+          }
+        },
+        "example": {
+          "name": "Jussara Silva",
+          "email": "jussara@email.com",
+          "password": "newpassword123",
+          "role": "technical",
+          "hours": [
+            {
+              "startTime": "2025-06-21T17:08:00.003Z",
+              "endTime": "2025-06-21T17:12:00.003Z"
+            }
+          ]
+        }
+      },
+      "Update User": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "Objeto JSON contendo os dados do usuário a serem atualizados. Deve ser stringified.",
+            "example": "{\"name\": \"Jussara\", \"email\": \"jussara@email.com\", \"password\": \"123456\", \"role\": \"technical\", \"hours\": [{\"startTime\": \"2025-06-21T17:08:00.003Z\", \"endTime\": \"2025-06-21T17:12:00.003Z\"}]}"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Arquivo de imagem para o avatar do usuário."
+          }
+        }
+      },
+      "Create Service": {
+        "type": "object",
+        "required": ["title", "value"],
+        "properties": {
+          "title": { "type": "string", "example": "Reparo de Computador" },
+          "value": { "type": "string", "example": "150,00", "description": "Valor do serviço no formato string com vírgula para decimal." }
+        }
+      },
+      "List Services Response": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "properties": {
+              "totalItems": { "type": "integer", "example": 5 },
+              "totalPages": { "type": "integer", "example": 1 },
+              "currentPage": { "type": "integer", "example": 1 },
+              "pageSize": { "type": "integer", "example": 10 },
+              "hasNextPage": { "type": "boolean", "example": false },
+              "hasPrevPage": { "type": "boolean", "example": false }
+            }
+          },
+          "listServices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string", "format": "uuid", "example": "b1a2c3d4-e5f6-7890-1234-56789abcdef0" },
+                "title": { "type": "string", "example": "Reparo de Computador" },
+                "value": { "type": "number", "format": "float", "example": 150.00 },
+                "status": { "type": "string", "enum": ["active", "inactive"], "example": "active" },
+                "createdAt": { "type": "string", "format": "date-time", "example": "2025-06-27T10:00:00Z" },
+                "updatedAt": { "type": "string", "format": "date-time", "example": "2025-06-27T10:00:00Z" }
+              }
+            }
+          }
+        }
+      },
+      "Update Service": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "example": "Instalação de Software" },
+          "value": { "type": "string", "example": "75,50", "description": "Valor do serviço no formato string com vírgula para decimal." },
+          "status": { "type": "string", "enum": ["active", "inactive"], "example": "inactive" }
         }
       }
     },
     "securitySchemes": {
       "bearerAuth": {
-        "description": "Autenticação ultilizando JWT",
+        "description": "Autenticação utilizando JWT",
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
@@ -167,7 +511,11 @@
     { "name": "Auth", "description": "Login com e-mail e senha" },
     {
       "name": "Users",
-      "description": "Cadastro de usuários protegidos por token"
+      "description": "Cadastro e gerenciamento de usuários protegidos por token"
+    },
+    {
+      "name": "Services",
+      "description": "Criação, listagem e atualização de serviços"
     }
   ]
 }

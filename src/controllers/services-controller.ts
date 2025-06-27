@@ -6,7 +6,7 @@ export class ServicesController {
   async create(request: Request, response: Response, next: NextFunction){
     try {
       await createServices(request.body)
-      return response.status(200).json({ message: "Serviço cadastrado com sucesso." })
+      return response.status(201).json({ message: "Serviço cadastrado com sucesso." })
     }catch(error) {
       next(error)
     } 
