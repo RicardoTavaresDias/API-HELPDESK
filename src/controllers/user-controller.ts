@@ -30,7 +30,7 @@ export class UserController {
 
     try {
       const users = await listAll({ page: Number(page), limit: Number(limit) })
-      if(!users.usersAll){
+      if(!users.data){
         return response.status(404).json({ message: "Usuários não encontrado." })
       }
       response.status(200).json(users)

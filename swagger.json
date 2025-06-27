@@ -379,15 +379,12 @@
           "result": {
             "type": "object",
             "properties": {
-              "totalItems": { "type": "integer", "example": 25 },
               "totalPages": { "type": "integer", "example": 3 },
-              "currentPage": { "type": "integer", "example": 1 },
-              "pageSize": { "type": "integer", "example": 10 },
-              "hasNextPage": { "type": "boolean", "example": true },
-              "hasPrevPage": { "type": "boolean", "example": false }
+              "next": { "type": "boolean", "example": true },
+              "previous": { "type": "boolean", "example": false }
             }
           },
-          "usersAll": {
+          "data": {
             "type": "array",
             "items": {
               "type": "object",
@@ -465,15 +462,12 @@
           "result": {
             "type": "object",
             "properties": {
-              "totalItems": { "type": "integer", "example": 5 },
               "totalPages": { "type": "integer", "example": 1 },
-              "currentPage": { "type": "integer", "example": 1 },
-              "pageSize": { "type": "integer", "example": 10 },
-              "hasNextPage": { "type": "boolean", "example": false },
-              "hasPrevPage": { "type": "boolean", "example": false }
+              "next": { "type": "boolean", "example": false },
+              "previous": { "type": "boolean", "example": false }
             }
           },
-          "listServices": {
+          "data": {
             "type": "array",
             "items": {
               "type": "object",

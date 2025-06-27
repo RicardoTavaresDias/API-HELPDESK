@@ -35,7 +35,7 @@ export const listServices = async (query: { page:string, limit: string, status: 
   const listServices =  await repository.services.list({ skip, take: Number(limit), status })  
   return {
     result: rest,
-    listServices
+    data: listServices
   }
 }
 

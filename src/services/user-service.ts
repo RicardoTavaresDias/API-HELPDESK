@@ -55,7 +55,10 @@ export const listAll = async (data: {page: number, limit: number}) => {
 
   const usersAll = await repository.user.indexAll({ skip: skip, take: data.limit })
 
-  return { result: rest, usersAll }
+  return { 
+    result: rest, 
+    data: usersAll 
+  }
 }
 
 export type UpdateUserType = {
