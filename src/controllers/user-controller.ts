@@ -28,8 +28,12 @@ export class UserController {
       })
     } 
 
+    if(request.params.role !== "technical" && request.params.role !== "customer"){
+      return response.status(404).json({ message: "Usuários não encontrado." })
+    }
+
     try {
-      const users = await listAll({ page: Number(page), limit: Number(limit) })
+      const users = await listAll({ page: Number(page), limit: Number(limit), role: request.params.role })
       if(!users.data){
         return response.status(404).json({ message: "Usuários não encontrado." })
       }

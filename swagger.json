@@ -2,20 +2,30 @@
   "openapi": "3.0.3",
   "info": {
     "title": "HelpDesk API",
-    "description": "Essa API foi desenvovido um sistemas completo de criação de chamados e atendimentos HELPDESK",
+    "description": "Essa API foi desenvolvida para um sistema completo de criação de chamados e atendimentos HELPDESK.",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "http://localhost:3333",
+      "description": "Servidor de Desenvolvimento Local"
+    }
+  ],
   "paths": {
     "/": {
       "post": {
-        "description": "Dados necessário para relização do login.",
+        "description": "Dados necessários para a realização do login.",
         "summary": "Login",
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Login" }
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
             }
           }
         },
@@ -24,65 +34,51 @@
             "description": "Dados do usuário e Token JWT",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Response Login" }
+                "schema": {
+                  "$ref": "#/components/schemas/Response Login"
+                }
               }
             }
           },
-          "400": { "description": "Dados inválidos" },
-          "401": { "description": "Credenciais incorretas" },
-          "404": { "description": "Usuário não registrado" }
-        }
-      }
-    },
-    "/user/cliente": {
-      "post": {
-        "description": "Dados necessário para cadastro de um novo Cliente no sistema.",
-        "summary": "Criar cliente",
-        "tags": ["Users"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Create User Customer" }
-            }
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Credenciais incorretas"
+          },
+          "404": {
+            "description": "Usuário não registrado"
           }
-        },
-        "responses": {
-          "201": { "description": "Criado com sucesso" },
-          "400": { "description": "Dados inválidos" },
-          "409": { "description": "Usuário já existe" }
         }
       }
     },
-    "/user/tecnico": {
-      "post": {
-        "description": "Dados necessário para cadastro de um novo Técnico no sistema, somente admin pode realizar o cadastro.",
-        "summary": "Criar técnico (admin)",
-        "tags": ["Users"],
-        "security": [{ "bearerAuth": [] }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Create User Technical" }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Criado com sucesso" },
-          "400": { "description": "Dados inválidos" },
-          "403": { "description": "Acesso negado" },
-          "409": { "description": "Usuário já existe" }
-        }
-      }
-    },
-    "/user": {
+    "/user/{role}": {
       "get": {
-        "description": "Lista todos os usuários registrados no sistema com paginação. Somente administradores têm acesso.",
-        "summary": "Listar usuários (admin)",
-        "tags": ["Users"],
-        "security": [{ "bearerAuth": [] }],
+        "description": "Lista todos os usuários de uma função específica (cliente e técnico) com paginação. Somente administradores podem listar os usuarios.",
+        "summary": "Listar usuários por função",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
+          {
+            "name": "role",
+            "in": "path",
+            "description": "O tipo de função dos usuários a serem listados.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "customer",
+                "technical"
+              ],
+              "example": "customer"
+            }
+          },
           {
             "name": "page",
             "in": "query",
@@ -111,16 +107,92 @@
             "description": "Lista de usuários retornada com sucesso.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/List Users Response" }
+                "schema": {
+                  "$ref": "#/components/schemas/List Users Response"
+                }
               }
             }
           },
           "400": {
-            "description": "Parâmetros de query inválidos (page ou limit)."
+            "description": "Parâmetros de query inválidos (page ou limit) ou roleType inválido."
           },
-          "403": { "description": "Acesso negado (não é admin)." },
-          "404": { "description": "Usuários não encontrados." },
-          "401": { "description": "Não autenticado." }
+          "401": {
+            "description": "Não autenticado."
+          },
+          "403": {
+            "description": "Acesso negado."
+          },
+          "404": {
+            "description": "Usuários não encontrados."
+          }
+        }
+      }
+    },
+    "/user/cliente": {
+      "post": {
+        "description": "Dados necessários para cadastro de um novo Cliente no sistema.",
+        "summary": "Criar cliente",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Create User Customer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado com sucesso"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "409": {
+            "description": "Usuário já existe"
+          }
+        }
+      }
+    },
+    "/user/tecnico": {
+      "post": {
+        "description": "Dados necessários para cadastro de um novo Técnico no sistema, somente admin pode realizar o cadastro.",
+        "summary": "Criar técnico (admin)",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Create User Technical"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado com sucesso"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "403": {
+            "description": "Acesso negado"
+          },
+          "409": {
+            "description": "Usuário já existe"
+          }
         }
       }
     },
@@ -128,8 +200,14 @@
       "patch": {
         "description": "Atualiza os dados de um usuário existente, incluindo a possibilidade de enviar um novo avatar. Protegido por autenticação JWT.",
         "summary": "Atualizar usuário",
-        "tags": ["Users"],
-        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -147,25 +225,41 @@
           "required": true,
           "content": {
             "multipart/form-data": {
-              "schema": { "$ref": "#/components/schemas/Update User" }
+              "schema": {
+                "$ref": "#/components/schemas/Update User"
+              }
             }
           }
         },
         "responses": {
-          "200": { "description": "Dados atualizado com sucesso." },
-          "400": { "description": "Dados inválidos." },
+          "200": {
+            "description": "Dados atualizados com sucesso."
+          },
+          "400": {
+            "description": "Dados inválidos."
+          },
           "401": {
             "description": "Não há dados para atualizar / Não autenticado."
           },
-          "403": { "description": "Acesso negado." },
-          "404": { "description": "Usuário não encontrado." }
+          "403": {
+            "description": "Acesso negado."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          }
         }
       },
       "delete": {
-        "description": "Remove um usuário do sistema. Somente administradores ou o próprio cliente podem remover o usuário.",
-        "summary": "Remover usuário (admin/cliente)",
-        "tags": ["Users"],
-        "security": [{ "bearerAuth": [] }],
+        "description": "Remove um usuário do sistema. Somente administradores ou o próprio cliente/técnico podem remover o usuário.",
+        "summary": "Remover usuário (admin/proprietário)",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -180,12 +274,18 @@
           }
         ],
         "responses": {
-          "200": { "description": "Usuário excluído com sucesso." },
+          "200": {
+            "description": "Usuário excluído com sucesso."
+          },
           "401": {
             "description": "Informe o ID do usuário / Não autenticado."
           },
-          "403": { "description": "Acesso negado." },
-          "404": { "description": "Usuário não encontrado." }
+          "403": {
+            "description": "Acesso negado."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          }
         }
       }
     },
@@ -193,8 +293,14 @@
       "get": {
         "summary": "Servir avatar do usuário",
         "description": "Retorna a imagem de avatar do usuário a partir do nome do arquivo. A rota serve arquivos estáticos da pasta de upload.",
-        "tags": ["Users"],
-        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "filename",
@@ -226,29 +332,53 @@
       "post": {
         "description": "Cria um novo serviço no sistema. Somente administradores podem realizar o cadastro.",
         "summary": "Criar serviço (admin)",
-        "tags": ["Services"],
-        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Create Service" }
+              "schema": {
+                "$ref": "#/components/schemas/Create Service"
+              }
             }
           }
         },
         "responses": {
-          "201": { "description": "Serviço cadastrado com sucesso." },
-          "400": { "description": "Dados inválidos." },
-          "403": { "description": "Acesso negado." },
-          "409": { "description": "Já existe um serviço com esse título." },
-          "401": { "description": "Não autenticado." }
+          "201": {
+            "description": "Serviço cadastrado com sucesso."
+          },
+          "400": {
+            "description": "Dados inválidos."
+          },
+          "403": {
+            "description": "Acesso negado."
+          },
+          "409": {
+            "description": "Já existe um serviço com esse título."
+          },
+          "401": {
+            "description": "Não autenticado."
+          }
         }
       },
       "get": {
         "description": "Lista todos os serviços registrados no sistema com paginação. Administradores e técnicos têm acesso.",
         "summary": "Listar serviços (admin/technical)",
-        "tags": ["Services"],
-        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "page",
@@ -279,7 +409,10 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["active", "inactive"],
+              "enum": [
+                "active",
+                "inactive"
+              ],
               "example": "active"
             }
           }
@@ -298,8 +431,12 @@
           "400": {
             "description": "Parâmetros de query inválidos (page, limit ou status)."
           },
-          "403": { "description": "Acesso negado." },
-          "401": { "description": "Não autenticado." }
+          "403": {
+            "description": "Acesso negado."
+          },
+          "401": {
+            "description": "Não autenticado."
+          }
         }
       }
     },
@@ -307,8 +444,14 @@
       "patch": {
         "description": "Atualiza os dados de um serviço existente. Somente administradores podem realizar a atualização.",
         "summary": "Atualizar serviço (admin)",
-        "tags": ["Services"],
-        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -326,18 +469,28 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Update Service" }
+              "schema": {
+                "$ref": "#/components/schemas/Update Service"
+              }
             }
           }
         },
         "responses": {
-          "200": { "description": "Dados atualizados com sucesso." },
-          "400": { "description": "Dados inválidos." },
+          "200": {
+            "description": "Dados atualizados com sucesso."
+          },
+          "400": {
+            "description": "Dados inválidos."
+          },
           "401": {
             "description": "Não há dados para atualizar / Não autenticado."
           },
-          "403": { "description": "Acesso negado." },
-          "404": { "description": "Serviço não encontrado." }
+          "403": {
+            "description": "Acesso negado."
+          },
+          "404": {
+            "description": "Serviço não encontrado."
+          }
         }
       }
     }
@@ -346,10 +499,19 @@
     "schemas": {
       "Login": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "properties": {
-          "email": { "type": "string", "example": "mateus@email.com" },
-          "password": { "type": "string", "example": "123456" }
+          "email": {
+            "type": "string",
+            "example": "mateus@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
         }
       },
       "Response Login": {
@@ -362,10 +524,22 @@
                 "type": "string",
                 "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
               },
-              "name": { "type": "string", "example": "Mateus" },
-              "email": { "type": "string", "example": "mateus@email.com" },
-              "role": { "type": "string", "example": "technical" },
-              "avatar": { "type": "string", "example": "default.svg" },
+              "name": {
+                "type": "string",
+                "example": "Mateus"
+              },
+              "email": {
+                "type": "string",
+                "example": "mateus@email.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "technical"
+              },
+              "avatar": {
+                "type": "string",
+                "example": "default.svg"
+              },
               "createdAt": {
                 "type": "string",
                 "format": "date-time",
@@ -396,7 +570,7 @@
               },
               "token": {
                 "type": "string",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
               }
             }
           }
@@ -404,23 +578,53 @@
       },
       "Create User Customer": {
         "type": "object",
-        "required": ["name", "email", "password"],
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
         "properties": {
-          "name": { "type": "string", "example": "João da Silva" },
-          "email": { "type": "string", "example": "joao@email.com" },
-          "password": { "type": "string", "example": "123456" }
+          "name": {
+            "type": "string",
+            "example": "João da Silva"
+          },
+          "email": {
+            "type": "string",
+            "example": "joao@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
         }
       },
       "Create User Technical": {
         "type": "object",
-        "required": ["name", "email", "password", "role", "hours"],
+        "required": [
+          "name",
+          "email",
+          "password",
+          "role",
+          "hours"
+        ],
         "properties": {
-          "name": { "type": "string", "example": "Maria Oliveira" },
-          "email": { "type": "string", "example": "maria@email.com" },
-          "password": { "type": "string", "example": "123456" },
+          "name": {
+            "type": "string",
+            "example": "Maria Oliveira"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          },
           "role": {
             "type": "string",
-            "enum": ["technical"],
+            "enum": [
+              "technical"
+            ],
             "example": "technical"
           },
           "hours": {
@@ -450,9 +654,18 @@
           "result": {
             "type": "object",
             "properties": {
-              "totalPages": { "type": "integer", "example": 3 },
-              "next": { "type": "boolean", "example": true },
-              "previous": { "type": "boolean", "example": false }
+              "totalPages": {
+                "type": "integer",
+                "example": 3
+              },
+              "next": {
+                "type": "boolean",
+                "example": true
+              },
+              "previous": {
+                "type": "boolean",
+                "example": false
+              }
             }
           },
           "data": {
@@ -462,12 +675,68 @@
               "properties": {
                 "id": {
                   "type": "string",
+                  "format": "uuid",
                   "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
                 },
-                "name": { "type": "string", "example": "Mateus" },
-                "email": { "type": "string", "example": "mateus@email.com" },
-                "role": { "type": "string", "example": "technical" },
-                "avatar": { "type": "string", "example": "default.svg" },
+                "name": {
+                  "type": "string",
+                  "example": "Mateus"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "mateus@email.com"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "customer",
+                    "technical",
+                    "admin"
+                  ],
+                  "example": "technical"
+                },
+                "avatar": {
+                  "type": "string",
+                  "example": "default.svg"
+                },
+                "userHours": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "614f5594-8fa3-47f1-a354-635ba95faf08"
+                      },
+                      "fkUserTechnical": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-21T17:08:00.003Z"
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-21T17:12:00.003Z"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-21T23:45:07.852Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-21T23:45:07.852Z"
+                      }
+                    }
+                  }
+                },
                 "createdAt": {
                   "type": "string",
                   "format": "date-time",
@@ -486,12 +755,25 @@
       "Update User Data": {
         "type": "object",
         "properties": {
-          "name": { "type": "string", "example": "Jussara Silva" },
-          "email": { "type": "string", "example": "jussara@email.com" },
-          "password": { "type": "string", "example": "newpassword123" },
+          "name": {
+            "type": "string",
+            "example": "Jussara Silva"
+          },
+          "email": {
+            "type": "string",
+            "example": "jussara@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "newpassword123"
+          },
           "role": {
             "type": "string",
-            "enum": ["customer", "technical", "admin"],
+            "enum": [
+              "customer",
+              "technical",
+              "admin"
+            ],
             "example": "technical"
           },
           "hours": {
@@ -513,18 +795,6 @@
             },
             "minItems": 0
           }
-        },
-        "example": {
-          "name": "Jussara Silva",
-          "email": "jussara@email.com",
-          "password": "newpassword123",
-          "role": "technical",
-          "hours": [
-            {
-              "startTime": "2025-06-21T17:08:00.003Z",
-              "endTime": "2025-06-21T17:12:00.003Z"
-            }
-          ]
         }
       },
       "Update User": {
@@ -532,21 +802,27 @@
         "properties": {
           "data": {
             "type": "string",
-            "description": "Objeto JSON contendo os dados do usuário a serem atualizados. Deve ser stringified.",
+            "description": "Objeto JSON contendo os dados do usuário a serem atualizados (name, email, password, role, hours). **Deve ser stringified.**",
             "example": "{\"name\": \"Jussara\", \"email\": \"jussara@email.com\", \"password\": \"123456\", \"role\": \"technical\", \"hours\": [{\"startTime\": \"2025-06-21T17:08:00.003Z\", \"endTime\": \"2025-06-21T17:12:00.003Z\"}]}"
           },
           "file": {
             "type": "string",
             "format": "binary",
-            "description": "Arquivo de imagem para o avatar do usuário."
+            "description": "Arquivo de imagem para o avatar do usuário (multipart/form-data)."
           }
         }
       },
       "Create Service": {
         "type": "object",
-        "required": ["title", "value"],
+        "required": [
+          "title",
+          "value"
+        ],
         "properties": {
-          "title": { "type": "string", "example": "Reparo de Computador" },
+          "title": {
+            "type": "string",
+            "example": "Reparo de Computador"
+          },
           "value": {
             "type": "string",
             "example": "150,00",
@@ -560,9 +836,18 @@
           "result": {
             "type": "object",
             "properties": {
-              "totalPages": { "type": "integer", "example": 1 },
-              "next": { "type": "boolean", "example": false },
-              "previous": { "type": "boolean", "example": false }
+              "totalPages": {
+                "type": "integer",
+                "example": 1
+              },
+              "next": {
+                "type": "boolean",
+                "example": false
+              },
+              "previous": {
+                "type": "boolean",
+                "example": false
+              }
             }
           },
           "data": {
@@ -586,7 +871,10 @@
                 },
                 "status": {
                   "type": "string",
-                  "enum": ["active", "inactive"],
+                  "enum": [
+                    "active",
+                    "inactive"
+                  ],
                   "example": "active"
                 },
                 "createdAt": {
@@ -607,7 +895,10 @@
       "Update Service": {
         "type": "object",
         "properties": {
-          "title": { "type": "string", "example": "Instalação de Software" },
+          "title": {
+            "type": "string",
+            "example": "Instalação de Software"
+          },
           "value": {
             "type": "string",
             "example": "75,50",
@@ -615,7 +906,10 @@
           },
           "status": {
             "type": "string",
-            "enum": ["active", "inactive"],
+            "enum": [
+              "active",
+              "inactive"
+            ],
             "example": "inactive"
           }
         }
@@ -631,7 +925,10 @@
     }
   },
   "tags": [
-    { "name": "Auth", "description": "Login com e-mail e senha" },
+    {
+      "name": "Auth",
+      "description": "Login com e-mail e senha"
+    },
     {
       "name": "Users",
       "description": "Cadastro e gerenciamento de usuários protegidos por token"

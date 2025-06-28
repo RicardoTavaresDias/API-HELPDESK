@@ -13,7 +13,7 @@ userRouter.post("/customer", userController.createCustomer)
 
 userRouter.use(ensureAuthenticated)
 userRouter.post("/technical", userAuthorization(["admin"]), userController.createTechnical)
-userRouter.get("/", userAuthorization(["admin"]), userController.index)
+userRouter.get("/:role", userAuthorization(["admin"]), userController.index)
 userRouter.patch("/:id", upload.single('file'), userController.update)
 userRouter.delete("/:id", userAuthorization(["admin", "customer"]), userController.remove)
 

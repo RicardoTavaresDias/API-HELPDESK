@@ -47,15 +47,14 @@ export const createUserTechnical  = async (data: TechnicalSchemaType) => {
   throw new AppError("Usuário já registrado", 409)
 }
 
-export const listAll = async (data: {page: number, limit: number}) => {
+export const listAll = async (data: {page: number, limit: number, role: "customer" | "technical" }) => {
   const repository = new Repository()
   const userCount = await repository.user.coutUser()
   const result = pagination(data.page, userCount, data.limit)
   const { skip, ...rest } = result
 
-  const usersAll = await repository.user.indexAll({ skip: skip, take: data.limit })
-
-  return { 
+  const usersAll = await repository.user.indexAll({ skip: skip, take: data.limit, role: data.role })
+    return { 
     result: rest, 
     data: usersAll 
   }

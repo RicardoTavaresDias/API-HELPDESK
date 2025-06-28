@@ -51,8 +51,11 @@ export class UserRepository {
     })
   }
 
-  async indexAll({ skip, take }: { skip: number, take: number}){
+  async indexAll({ skip, take, role }: { skip: number, take: number, role: "customer" | "technical"}){
     return await this.prisma.user.findMany({
+      where: {
+        role: role
+      },
       select: {
         id: true,
         name: true,
