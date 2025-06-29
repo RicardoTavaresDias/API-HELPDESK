@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser } from "../services/user-service";
+import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser } from "../services/user-service";
 
 export class UserController {
   async createCustomer(request: Request, response: Response, next: NextFunction){
@@ -35,9 +35,18 @@ export class UserController {
     try {
       const users = await listAll({ page: Number(page), limit: Number(limit), role: request.params.role })
       if(!users.data){
-        return response.status(404).json({ message: "Usuários não encontrado." })
+        return response.status(404).json({ message: "Perfil inválido fornecido." })
       }
       response.status(200).json(users)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async showUser(request: Request, response: Response, next: NextFunction) {
+    try {
+      const byUser = await indexByUser(request.params.id)
+      response.status(200).json(byUser)
     } catch (error) {
       next(error)
     }

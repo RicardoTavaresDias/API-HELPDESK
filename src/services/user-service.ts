@@ -60,6 +60,16 @@ export const listAll = async (data: {page: number, limit: number, role: "custome
   }
 }
 
+export const indexByUser = async (id: string) => {
+  const repository = new Repository()
+  const byUser = await repository.user.isUser({ id })
+  if(!byUser){
+    throw new AppError("Usuários não encontrado.", 404)
+  }
+
+  return byUser
+}
+
 export type UpdateUserType = {
   name?: string
   email?: string

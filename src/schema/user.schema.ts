@@ -1,4 +1,4 @@
-import z from 'zod'
+import z, { object } from 'zod'
 
 // Schema Email
 export const emailSchema = z.string({ message: "Campo somente string" })
@@ -40,7 +40,9 @@ export const technicalSchema = z.object({
 })
 export type TechnicalSchemaType = z.infer<typeof technicalSchema>
 
- 
+
+// Schema UUID
+export const uuidSchema = z.string().uuid({ message: "Id invalido." })
 
 
 

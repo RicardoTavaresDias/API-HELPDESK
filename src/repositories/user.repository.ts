@@ -11,8 +11,8 @@ export class UserRepository {
   async isUser({ userEmail, id }: { userEmail?: string, id?: string }){
     return await this.prisma.user.findFirst({
       where: {
-        email: userEmail && userEmail,
-        id: id && id
+        email: userEmail,
+        id: id
       },
       include: {
         userHours: {
