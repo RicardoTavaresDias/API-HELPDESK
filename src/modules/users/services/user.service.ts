@@ -1,6 +1,6 @@
 import { pagination } from "@/libs/pagination"
 import Repository from "@/repositories"
-import { emailSchema, technicalSchema, userSchema } from "../schemas/user.schema"
+import { emailSchema } from "../schemas/user.schema"
 import type { EmailSchemaType, TechnicalSchemaType, UserSchematype} from "../schemas/user.schema"
 import { AppError } from "@/utils/AppError"
 import { hash } from "bcrypt"
@@ -16,32 +16,22 @@ export const existUser = async (email: EmailSchemaType) => {
 }
 
 export const createUserCustomer = async (data: UserSchematype) => {
-  const userCustomer = userSchema.safeParse(data)
-  if(!userCustomer.success){
-    throw new AppError(userCustomer.error.issues[0].message, 400)
-  }
-
-  const userExist = await existUser(userCustomer.data.email)
+  const userExist = await existUser(data.email)
   if(!userExist){
     const repository = new Repository()
-    const hashPassword =  await hash(userCustomer.data.password, 12)
-    return await repository.user.createCustomer({...userCustomer.data, password: hashPassword})
+    const hashPassword =  await hash(data.password, 12)
+    return await repository.user.createCustomer({...data, password: hashPassword})
   }
   
   throw new AppError("Usuário já registrado", 409)
 }
 
 export const createUserTechnical  = async (data: TechnicalSchemaType) => {
-  const userTechnical = technicalSchema.safeParse(data)
-  if(!userTechnical.success){
-    throw new AppError(userTechnical.error.issues[0].message , 400)
-  }
-
-  const userExist = await existUser(userTechnical.data.email)
+  const userExist = await existUser(data.email)
   if(!userExist){
     const repository = new Repository()
-    const hashPassword =  await hash(userTechnical.data.password, 12)
-    return await repository.user.createTechnical({...userTechnical.data, password: hashPassword})
+    const hashPassword =  await hash(data.password, 12)
+    return await repository.user.createTechnical({...data, password: hashPassword})
   }
 
   throw new AppError("Usuário já registrado", 409)
@@ -75,20 +65,14 @@ export type UpdateUserType = {
   email?: string
   password?: string
   avatar?: string
-  hours?: {
+  userHours?: {
     startTime: Date
     endTime: Date
   }[]
 } 
 
 export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType }) => {
-  const newSchema = technicalSchema.partial()
-  const user = newSchema.safeParse(dataUpdate)
-  if(!user.success){
-    throw new AppError(user.error.issues[0].message , 400)
-  }
- 
-  const dataUser: UpdateUserType = user.data
+  const dataUser: UpdateUserType = dataUpdate
  
   if(dataUser.password) dataUser.password = await hash(dataUser.password, 12) 
   if(dataUpdate.avatar){
@@ -100,10 +84,10 @@ export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: U
   const existUser = await repository.user.isUser({ id })
   if(!existUser) throw new AppError("Usuários não encontrado.", 404)
   
-  if(existUser.role === "customer" && user.data.hours){
+  if(existUser.role === "customer" && dataUser.userHours){
     throw new AppError("Clientes não possuem horas de atendimento associadas.", 403)
   }
-  
+ 
   return await repository.user.update({ id, dataUpdate: dataUser })
 }
 

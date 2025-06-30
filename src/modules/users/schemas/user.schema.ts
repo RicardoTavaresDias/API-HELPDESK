@@ -32,7 +32,7 @@ export type UserSchematype = z.infer<typeof userSchema>
 export const technicalSchema = z.object({
   ...userSchema.shape,
   role: z.enum(["technical"]),
-  hours: z.array(z.object({
+  userHours: z.array(z.object({
     startTime: z.coerce.date({ message: "startTime Inválido" }),
     endTime: z.coerce.date({ message: "endTime Inválido" })
   }))

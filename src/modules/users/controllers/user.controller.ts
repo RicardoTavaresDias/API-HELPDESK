@@ -1,10 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser } from "../services/user.service";
+import { technicalSchema, userSchema } from "../schemas/user.schema"
 
 export class UserController {
   async createCustomer(request: Request, response: Response, next: NextFunction){
     try {
-      await createUserCustomer(request.body)
+      const userCustomer = userSchema.safeParse(request.body)
+        if(!userCustomer.success){
+          return response.status(400).json({ message: userCustomer.error.issues[0].message })
+        }
+
+      await createUserCustomer(userCustomer.data)
       response.status(201).json({ message: "Cadastro concluído com sucesso" })
     } catch(error: any){
       next(error)
@@ -13,7 +19,12 @@ export class UserController {
 
   async createTechnical(request: Request, response: Response, next: NextFunction){
     try {
-      await createUserTechnical(request.body)
+      const userTechnical = technicalSchema.safeParse(request.body)
+      if(!userTechnical.success){
+        return response.status(400).json({ message: userTechnical.error.issues[0].message })
+      }
+
+      await createUserTechnical(userTechnical.data)
       response.status(201).json({ message: "Cadastro concluído com sucesso" })
     } catch(error: any){
       next(error)
@@ -94,7 +105,14 @@ export class UserController {
       const idUser = request.params.id
 
       const data = request.file ? { ...dataUpdate, avatar: request.file.filename } : dataUpdate
-      await updateUser({ id: idUser, dataUpdate: data})
+
+      const newSchema = technicalSchema.partial()
+      const user = newSchema.safeParse(data)
+      if(!user.success){
+        return response.status(400).json({ message: user.error.issues[0].message })
+      }
+
+      await updateUser({ id: idUser, dataUpdate: user.data})
       response.status(200).json({ message: "Dados atualizado com sucesso" })
     } catch (error) {
       next(error)

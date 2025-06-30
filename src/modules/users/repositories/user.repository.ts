@@ -39,7 +39,7 @@ export class UserRepository {
         password: data.password,
         role: data.role,
         userHours: {
-          create: data.hours.map(hour => ({
+          create: data.userHours.map(hour => ({
             startTime: hour.startTime,
             endTime: hour.endTime
           }))
@@ -78,9 +78,9 @@ export class UserRepository {
   }
 
   async update({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType}){
-    const { hours, ...rest } = dataUpdate
+    const { userHours, ...rest } = dataUpdate
 
-    if(hours?.length){
+    if(userHours?.length){
       return await this.prisma.user.update({
         where: {
           id: id
@@ -89,7 +89,7 @@ export class UserRepository {
           ...rest,
           userHours: {
             deleteMany: {},
-            create: hours
+            create: userHours
           }
         }
       })
@@ -99,7 +99,7 @@ export class UserRepository {
       where: {
         id: id
       },
-      data: dataUpdate
+      data: rest 
     })
   }
 
