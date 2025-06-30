@@ -73,8 +73,12 @@ export class UserRepository {
     })  
   }
 
-  async coutUser(){
-    return await this.prisma.user.count()
+  async coutUser(role: "technical" | "customer"){
+    return await this.prisma.user.count({
+      where: {
+        role: role
+      }
+    })
   }
 
   async update({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType}){

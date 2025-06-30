@@ -10,9 +10,9 @@ export const pagination = (page: number, totalItems: number, limit: number) => {
     totalPage: Math.ceil(totalItems / limit), // Page Total
     skip: (page - 1) * limit // current page
   }
-
+console.log(totalItems)
   if(page > 1) pagination.previous = page - 1 // Previous
-  if(page < totalItems) pagination.next = page + 1 // Next
+  if(page < pagination.totalPage) pagination.next = page + 1 // Next
   
   return pagination
 }

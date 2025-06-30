@@ -39,7 +39,7 @@ export const createUserTechnical  = async (data: TechnicalSchemaType) => {
 
 export const listAll = async (data: {page: number, limit: number, role: "customer" | "technical" }) => {
   const repository = new Repository()
-  const userCount = await repository.user.coutUser()
+  const userCount = await repository.user.coutUser(data.role)
   const result = pagination(data.page, userCount, data.limit)
   const { skip, ...rest } = result
 
