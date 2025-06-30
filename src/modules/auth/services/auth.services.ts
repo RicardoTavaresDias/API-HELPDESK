@@ -1,9 +1,9 @@
-import Repository from "../repositories"
-import { authUserSchema } from "../schema/auth.schema"
-import type { UserTokenReturn } from "../types/token"
-import { AppError } from "../utils/AppError"
+import Repository from "../../../repositories"
+import { authUserSchema } from "../schemas/auth.schema"
+import type { UserTokenReturn } from "../../../types/token"
+import { AppError } from "../../../utils/AppError"
 import jwt from "jsonwebtoken";
-import { authConfig } from "../config/jwt";
+import { authConfig } from "../../../config/jwt";
 import { compare } from "bcrypt"
 
 export type authType = {

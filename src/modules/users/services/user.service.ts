@@ -1,8 +1,8 @@
-import { pagination } from "../libs/pagination"
-import Repository from "../repositories"
-import { emailSchema, technicalSchema, userSchema } from "../schema/user.schema"
-import type { EmailSchemaType, TechnicalSchemaType, UserSchematype} from "../schema/user.schema"
-import { AppError } from "../utils/AppError"
+import { pagination } from "@/libs/pagination"
+import Repository from "@/repositories"
+import { emailSchema, technicalSchema, userSchema } from "../schemas/user.schema"
+import type { EmailSchemaType, TechnicalSchemaType, UserSchematype} from "../schemas/user.schema"
+import { AppError } from "@/utils/AppError"
 import { hash } from "bcrypt"
 
 export const existUser = async (email: EmailSchemaType) => {

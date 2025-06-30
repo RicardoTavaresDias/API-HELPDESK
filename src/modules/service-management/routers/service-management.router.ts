@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { ServicesController } from "../controllers/services-controller";
-import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
-import { userAuthorization } from "../middlewares/userAuthorization";
+import { ServicesController } from "../controllers/service-management.controller";
+import { ensureAuthenticated } from "../../../middlewares/ensureAuthenticated";
+import { userAuthorization } from "../../../middlewares/userAuthorization";
 
 export const servicesRouter = Router()
 const servicesController = new ServicesController()

@@ -1,8 +1,8 @@
-import { servicesSchema, statusServicesEnum, updateSchema } from "../schema/services.schema"
-import { AppError } from "../utils/AppError"
-import type { ServicesSchema, StatusServicesEnum, UpdateSchemaType } from "../schema/services.schema"
-import Repository from "../repositories"
-import { pagination } from "../libs/pagination"
+import { servicesSchema, statusServicesEnum, updateSchema } from "../schemas/service-management.schema"
+import { AppError } from "@/utils/AppError"
+import type { ServicesSchema, StatusServicesEnum, UpdateSchemaType } from "../schemas/service-management.schema"
+import Repository from "@/repositories"
+import { pagination } from "@/libs/pagination"
 
 export const createServices = async ({ title, value }: ServicesSchema) => {
   const services = servicesSchema.safeParse({ title, value })

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { authRouter } from "./auth.router";
-import { userRouter } from "./user.router";
-import { servicesRouter } from "./services.router";
+import { authRouter } from "@/modules/auth/routers/auth.router";
+import { userRouter } from "@/modules/users/routers/user.router";
+import { servicesRouter } from "@/modules/service-management/routers/service-management.router";
 
 export const router = Router()
 

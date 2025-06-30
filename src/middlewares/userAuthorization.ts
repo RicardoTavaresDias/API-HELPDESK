@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { AppError } from "../utils/AppError"
-import {uuidSchema } from "../schema/user.schema"
+import {uuidSchema } from "../modules/users/schemas/user.schema"
 
 function userAuthorization(role: string[]){
   return (request: Request, response: Response, next: NextFunction) => {

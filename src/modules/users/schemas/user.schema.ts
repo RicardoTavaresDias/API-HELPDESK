@@ -1,4 +1,4 @@
-import z, { object } from 'zod'
+import z from 'zod'
 
 // Schema Email
 export const emailSchema = z.string({ message: "Campo somente string" })

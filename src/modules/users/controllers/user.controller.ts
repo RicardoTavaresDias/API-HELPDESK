@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser } from "../services/user-service";
+import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser } from "../services/user.service";
 
 export class UserController {
   async createCustomer(request: Request, response: Response, next: NextFunction){

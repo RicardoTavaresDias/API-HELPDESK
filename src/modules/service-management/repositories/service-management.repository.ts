@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import type { ServicesSchema, StatusServicesEnum, UpdateSchemaType } from "../schema/services.schema"
+import type { ServicesSchema, StatusServicesEnum, UpdateSchemaType } from "../schemas/service-management.schema"
 
 export class ServicesRepository {
   prisma: PrismaClient;

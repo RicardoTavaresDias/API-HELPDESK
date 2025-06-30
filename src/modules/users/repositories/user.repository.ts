@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { UserSchematype, TechnicalSchemaType } from "../schema/user.schema"
-import type { UpdateUserType } from "../services/user-service"
+import { UserSchematype, TechnicalSchemaType } from "../schemas/user.schema"
+import type { UpdateUserType } from "../services/user.service"
 
 export class UserRepository {
   prisma: PrismaClient;

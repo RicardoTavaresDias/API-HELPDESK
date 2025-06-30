@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { userAuth } from "../services/auth-services"
+import { userAuth } from "../services/auth.services"
 
 export class Auth {
   async session(request: Request, response: Response, next: NextFunction){

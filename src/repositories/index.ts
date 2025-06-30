@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { UserRepository } from "./user.repository"; 
-import { ServicesRepository } from "./services.repository"
+import { UserRepository } from "@/modules/users/repositories/user.repository"; 
+import { ServicesRepository } from "@/modules/service-management/repositories/service-management.repository"
 
 class Repository {
   prisma = new PrismaClient()

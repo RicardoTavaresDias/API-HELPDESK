@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { listServices, updateServices, createServices } from "../services/services-service";
-import type { StatusServicesEnum } from "../schema/services.schema"
+import { listServices, updateServices, createServices } from "../services/service-management.service";
+import type { StatusServicesEnum } from "../schemas/service-management.schema"
 
 export class ServicesController {
   async create(request: Request, response: Response, next: NextFunction){
