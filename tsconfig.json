@@ -3,7 +3,7 @@
     "target": "ES2022",
     "lib": ["ES2023"],
     "paths": {
-      "@/": ["./src/"]
+      "@/*": ["./src/*"]
     },
     "module": "Node16",
     "esModuleInterop": true,
