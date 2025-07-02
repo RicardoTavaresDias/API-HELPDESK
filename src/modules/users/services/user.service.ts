@@ -57,7 +57,9 @@ export const indexByUser = async (id: string) => {
     throw new AppError("Usuários não encontrado.", 404)
   }
 
-  return byUser
+  const {  password, role, createdAt, updatedAt, ...rest } = byUser
+
+  return rest
 }
 
 export type UpdateUserType = {
