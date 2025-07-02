@@ -61,6 +61,7 @@ export class UserRepository {
         name: true,
         email: true,
         role: true,
+        avatar: true,
         createdAt: true,
         updatedAt: true,
         userHours: true
