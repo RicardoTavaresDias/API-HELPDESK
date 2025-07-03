@@ -410,11 +410,6 @@
         "tags": [
           "Users"
         ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "parameters": [
           {
             "name": "filename",

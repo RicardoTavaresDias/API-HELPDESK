@@ -101,18 +101,17 @@ export class UserController {
         return response.status(401).json({ message: "Não há dados para atualizar." })
       }
 
-      const dataUpdate = request.body.data && JSON.parse(request.body.data)
+      const dataUpdate = request.body.data ? JSON.parse(request.body.data) : {}
       const idUser = request.params.id
 
-      const data = request.file ? { ...dataUpdate, avatar: request.file.filename } : dataUpdate
-
       const newSchema = technicalSchema.partial()
-      const user = newSchema.safeParse(data)
+      const user = newSchema.safeParse(dataUpdate)
       if(!user.success){
         return response.status(400).json({ message: user.error.issues[0].message })
       }
 
-      await updateUser({ id: idUser, dataUpdate: user.data})
+      const data = request.file ? { ...user.data, avatar: request.file.filename } : user.data
+      await updateUser({ id: idUser, dataUpdate: data})
       response.status(200).json({ message: "Dados atualizado com sucesso" })
     } catch (error) {
       next(error)

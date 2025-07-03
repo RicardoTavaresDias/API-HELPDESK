@@ -75,7 +75,6 @@ export type UpdateUserType = {
 
 export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType }) => {
   const dataUser: UpdateUserType = dataUpdate
- 
   if(dataUser.password) dataUser.password = await hash(dataUser.password, 12) 
   if(dataUpdate.avatar){
     dataUser.avatar = dataUpdate.avatar

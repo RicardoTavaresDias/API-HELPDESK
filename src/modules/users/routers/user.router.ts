@@ -10,6 +10,7 @@ const userController = new UserController()
 export const userRouter = Router()
 
 userRouter.post("/customer", userController.createCustomer)
+userRouter.use("/avatar", express.static("./upload"))
 
 userRouter.use(ensureAuthenticated)
 userRouter.post("/technical", userAuthorization(["admin"]), userController.createTechnical)
@@ -18,4 +19,3 @@ userRouter.get("/list/:role", userAuthorization(["admin"]), userController.index
 userRouter.patch("/:id", validateUserId, upload.single('file'), userController.update)
 userRouter.delete("/:id", validateUserId, userAuthorization(["admin", "customer"]), userController.remove)
 
-userRouter.use("/avatar", express.static("./upload"))
