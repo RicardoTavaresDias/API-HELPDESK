@@ -437,6 +437,96 @@
         }
       }
     },
+    "/user/avatar/{id}": {
+      "delete": {
+        "description": "Remove o avatar de um usuário, resetando-o para o avatar padrão 'default.svg'. Protegido por autenticação JWT.",
+        "summary": "Remover avatar do usuário",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário cujo avatar será removido.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avatar removido com sucesso. O avatar do usuário foi resetado para 'default.svg'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User by Id Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos. (Ex: ID não corresponde ao formato UUID)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Informe id do usuário"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado."
+          },
+          "403": {
+            "description": "Acesso negado. (Ex: Usuário não tem permissão para remover o avatar deste usuário ou não é um administrador)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Acesso negado. Você não tem permissão para remover o avatar deste usuário."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário ou arquivo de avatar não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Usuário não encontrado."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/services": {
       "post": {
         "description": "Cria um novo serviço no sistema. Somente administradores podem realizar o cadastro.",

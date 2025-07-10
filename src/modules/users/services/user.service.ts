@@ -4,6 +4,7 @@ import { emailSchema } from "../schemas/user.schema"
 import type { EmailSchemaType, TechnicalSchemaType, UserSchematype} from "../schemas/user.schema"
 import { AppError } from "@/utils/AppError"
 import { hash } from "bcrypt"
+import fs from "node:fs"
 
 export const existUser = async (email: EmailSchemaType) => {
   const repository = new Repository()
@@ -100,4 +101,22 @@ export const removerUser = async (id: string) => {
   }
 
   return await repository.user.remove(id)
+}
+
+export const removeAvatar = async (id: string) => {
+  const repository = new Repository()
+  const existUser = await repository.user.isUser({ id })
+  if(!existUser){
+    throw new AppError("Usuários não encontrado.", 404)
+  }
+
+  if(!fs.existsSync(`./upload/${existUser.avatar}`)){
+    throw new AppError("Arquivo não encontrado.", 404)
+  }
+
+  fs.unlinkSync(`./upload/${existUser.avatar}`)
+  
+  const result = await repository.user.update({ id, dataUpdate: { avatar: "default.svg" } })
+
+  return { result }
 }

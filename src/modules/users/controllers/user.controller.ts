@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser } from "../services/user.service";
+import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser, removeAvatar } from "../services/user.service";
 import { technicalSchema, userSchema } from "../schemas/user.schema"
 
 export class UserController {
@@ -126,6 +126,21 @@ export class UserController {
       }
       await removerUser(id)
       response.status(200).json({ message: "Usuário excluido com sucesso." })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async removeAvatar(request: Request, response: Response, next: NextFunction) {
+    try {
+      const id = request.params.id
+      if(!id){
+        return response.status(401).json({ message: "Informe id do usuário" })
+      }
+
+      const resultRemove = await removeAvatar(id)
+
+      response.status(200).json(resultRemove.result)
     } catch (error) {
       next(error)
     }
