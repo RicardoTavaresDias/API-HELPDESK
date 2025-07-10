@@ -111,8 +111,8 @@ export class UserController {
       }
 
       const data = request.file ? { ...user.data, avatar: request.file.filename } : user.data
-      await updateUser({ id: idUser, dataUpdate: data})
-      response.status(200).json({ message: "Dados atualizado com sucesso" })
+      const responseUpdateUser = await updateUser({ id: idUser, dataUpdate: data})
+      response.status(200).json(responseUpdateUser)
     } catch (error) {
       next(error)
     }

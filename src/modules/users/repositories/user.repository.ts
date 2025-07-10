@@ -104,6 +104,14 @@ export class UserRepository {
       where: {
         id: id
       },
+      select:{
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        avatar: true,
+        userHours: true
+      },
       data: rest 
     })
   }
