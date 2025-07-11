@@ -19,4 +19,5 @@ userRouter.get("/list/:role", userAuthorization(["admin"]), userController.index
 userRouter.patch("/:id", validateUserId, upload.single('file'), userController.update)
 userRouter.delete("/:id", validateUserId, userAuthorization(["admin", "customer"]), userController.remove)
 userRouter.delete("/avatar/:id", validateUserId, userController.removeAvatar)
+userRouter.patch("/:id/changePassword", validateUserId, userController.changePassword)
 

@@ -527,6 +527,73 @@
         }
       }
     },
+    "/user/{id}/changePassword": { 
+      "patch": {
+        "description": "Atualiza a senha de um usuário específico. Requer a senha atual para validação.",
+        "summary": "Alterar senha do usuário",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário cuja senha será alterada.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Senha alterada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Senha alterada com sucesso."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos (por exemplo, nova senha não atende aos requisitos)."
+          },
+          "401": {
+            "description": "Não autenticado ou senha atual incorreta."
+          },
+          "403": {
+            "description": "Acesso negado (usuário não tem permissão para alterar a senha de outro usuário)."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          }
+        }
+      }
+    },
     "/services": {
       "post": {
         "description": "Cria um novo serviço no sistema. Somente administradores podem realizar o cadastro.",
@@ -1041,10 +1108,6 @@
             "type": "string",
             "example": "jussara@email.com"
           },
-          "password": {
-            "type": "string",
-            "example": "newpassword123"
-          },
           "role": {
             "type": "string",
             "enum": [
@@ -1087,6 +1150,25 @@
             "type": "string",
             "format": "binary",
             "description": "Arquivo de imagem para o avatar do usuário (multipart/form-data)."
+          }
+        }
+      },
+      "PasswordUpdate": {
+        "type": "object",
+        "required": [
+          "oldPassword",
+          "newPassword"
+        ],
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "example": "senhaAntiga123",
+            "description": "A senha atual do usuário."
+          },
+          "newPassword": {
+            "type": "string",
+            "example": "novaSenhaSegura456",
+            "description": "A nova senha para o usuário (deve ter pelo menos 6 caracteres)."
           }
         }
       },

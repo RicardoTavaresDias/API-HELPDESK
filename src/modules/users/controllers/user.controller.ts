@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser, removeAvatar } from "../services/user.service";
-import { technicalSchema, userSchema } from "../schemas/user.schema"
+import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser, removeAvatar, updatePassword } from "../services/user.service";
+import { passwordSchema, technicalSchema, updateUserSchema, userSchema } from "../schemas/user.schema"
 
 export class UserController {
   async createCustomer(request: Request, response: Response, next: NextFunction){
@@ -104,7 +104,7 @@ export class UserController {
       const dataUpdate = request.body.data ? JSON.parse(request.body.data) : {}
       const idUser = request.params.id
 
-      const newSchema = technicalSchema.partial()
+      const newSchema = updateUserSchema.partial()
       const user = newSchema.safeParse(dataUpdate)
       if(!user.success){
         return response.status(400).json({ message: user.error.issues[0].message })
@@ -141,6 +141,25 @@ export class UserController {
       const resultRemove = await removeAvatar(id)
 
       response.status(200).json(resultRemove.result)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async changePassword(request: Request, response: Response, next: NextFunction){
+    try {
+      const newPasswordSchema = passwordSchema.safeParse(request.body)
+      if(!newPasswordSchema.success) {
+        return response.status(400).json({ message: newPasswordSchema.error.issues[0].message })
+      }
+
+      await updatePassword({ 
+        id: request.params.id, 
+        newPassword: newPasswordSchema.data.newPassword, 
+        oldPassaword: newPasswordSchema.data.oldPassword 
+      })
+
+      return response.status(200).json({ message: "Senha alterada com sucesso." })
     } catch (error) {
       next(error)
     }

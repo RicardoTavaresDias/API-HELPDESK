@@ -3,7 +3,7 @@ import Repository from "@/repositories"
 import { emailSchema } from "../schemas/user.schema"
 import type { EmailSchemaType, TechnicalSchemaType, UserSchematype} from "../schemas/user.schema"
 import { AppError } from "@/utils/AppError"
-import { hash } from "bcrypt"
+import { hash, compare } from "bcrypt"
 import fs from "node:fs"
 
 export const existUser = async (email: EmailSchemaType) => {
@@ -76,7 +76,6 @@ export type UpdateUserType = {
 
 export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType }) => {
   const dataUser: UpdateUserType = dataUpdate
-  if(dataUser.password) dataUser.password = await hash(dataUser.password, 12) 
   if(dataUpdate.avatar){
     dataUser.avatar = dataUpdate.avatar
   }
@@ -91,6 +90,20 @@ export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: U
   }
  
   return await repository.user.update({ id, dataUpdate: dataUser })
+}
+
+export const updatePassword = async ({ newPassword, oldPassaword, id }: { newPassword: string, oldPassaword: string, id: string }) => {
+  const repository = new Repository()
+  const dataUser = await repository.user.isUser({ id })
+  if(!dataUser) throw new AppError("Usuários não encontrado.", 404)
+
+  const validationPassword = await compare(oldPassaword, dataUser?.password!)
+  if(!validationPassword) {
+    throw new AppError("Senha atual incorreto.", 401)
+  }
+
+  const newPasswordHash = await hash(newPassword, 12)
+  return repository.user.update({ id, dataUpdate: { password: newPasswordHash } })
 }
 
 export const removerUser = async (id: string) => {

@@ -45,5 +45,22 @@ export type TechnicalSchemaType = z.infer<typeof technicalSchema>
 export const uuidSchema = z.string().uuid({ message: "Id invalido." })
 
 
+// UpdateUser
+export const updateUserSchema = z.object({
+  ...technicalSchema.omit({ password: true }).shape
+})
+
+export type UpdateUserType = z.infer<typeof updateUserSchema>
+
+
+// New Password
+export const passwordSchema = z.object({
+  newPassword: z.string().min(6, { message: "Preencha o campo com pelo menos 6 caracteres" }),
+  oldPassword: z.string()
+})
+
+export type PasswordType = z.infer<typeof passwordSchema>
+
+
 
 
