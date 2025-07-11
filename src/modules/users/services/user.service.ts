@@ -76,17 +76,17 @@ export type UpdateUserType = {
 
 export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: UpdateUserType }) => {
   const dataUser: UpdateUserType = dataUpdate
-  if(dataUpdate.avatar){
-    dataUser.avatar = dataUpdate.avatar
-  }
-
   const repository = new Repository()
   
   const existUser = await repository.user.isUser({ id })
   if(!existUser) throw new AppError("Usuários não encontrado.", 404)
   
-  if(existUser.avatar !== "default.svg"){
-    fs.unlinkSync(`./upload/${existUser.avatar}`)
+  if(dataUpdate.avatar){
+    if(existUser.avatar !== "default.svg"){
+      fs.unlinkSync(`./upload/${existUser.avatar}`)
+    }
+  
+    dataUser.avatar = dataUpdate.avatar
   }
   
   if(existUser.role === "customer" && dataUser.userHours){
