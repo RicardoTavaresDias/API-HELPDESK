@@ -85,6 +85,10 @@ export const updateUser = async ({ id, dataUpdate }: { id: string, dataUpdate: U
   const existUser = await repository.user.isUser({ id })
   if(!existUser) throw new AppError("Usuários não encontrado.", 404)
   
+  if(existUser.avatar !== "default.svg"){
+    fs.unlinkSync(`./upload/${existUser.avatar}`)
+  }
+  
   if(existUser.role === "customer" && dataUser.userHours){
     throw new AppError("Clientes não possuem horas de atendimento associadas.", 403)
   }
