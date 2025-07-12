@@ -15,7 +15,7 @@ export class CalledRepository {
         titleCalled: "Teste chamado novo",
         description: "Descrição de um chamado novo para teste.",
         services: {
-          create: [
+          create: [ // Fazer map para incluir mais de um services id.
             {
               services: {
                 connect: { id: "4e1936f3-4d60-4455-b480-52f51631084f" }
@@ -30,11 +30,7 @@ export class CalledRepository {
         }
       },
       include: {
-        services: {
-          include: {
-            services: true
-          }
-        }
+        services: true
       }
     })
 
