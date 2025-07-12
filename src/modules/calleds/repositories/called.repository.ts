@@ -10,20 +10,20 @@ export class CalledRepository {
   async create(){ 
     return await this.prisma.called.create({
       data: {
-        fkUserCustomer: "7165a110-f039-4a1e-b4e0-8dc56a467e7e",
-        fkUserTechnical: "34147b4b-c113-482e-85fc-5730148b5d11",
+        fkUserCustomer: "c3a37d4d-4dc9-4324-9747-ff0eb1175cde",
+        fkUserTechnical: "f72c548e-103e-480e-97e1-e627a3ba335c",
         titleCalled: "Teste chamado novo",
         description: "Descrição de um chamado novo para teste.",
         services: {
           create: [ // Fazer map para incluir mais de um services id.
             {
               services: {
-                connect: { id: "539907e8-63be-41b1-b12e-5ac1df897313" }
+                connect: { id: "04e3239c-7e3a-43a5-8adb-4aba49094c64" }
               },
             },
             {
               services: {
-                connect: { id: "fe199343-35aa-47e1-8195-58682df00159" }
+                connect: { id: "67dd6f63-c40f-40d0-ad08-dfbc66722561" }
               }
             }
           ]

@@ -18,7 +18,7 @@ CREATE TABLE "user_hours" (
     "end_time" DATETIME NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME,
-    CONSTRAINT "user_hours_fk_user_technical_fkey" FOREIGN KEY ("fk_user_technical") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "user_hours_fk_user_technical_fkey" FOREIGN KEY ("fk_user_technical") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -31,8 +31,8 @@ CREATE TABLE "called" (
     "call_status" TEXT NOT NULL DEFAULT 'open',
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME,
-    CONSTRAINT "called_fk_user_customer_fkey" FOREIGN KEY ("fk_user_customer") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "called_fk_user_technical_fkey" FOREIGN KEY ("fk_user_technical") REFERENCES "user" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "called_fk_user_customer_fkey" FOREIGN KEY ("fk_user_customer") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "called_fk_user_technical_fkey" FOREIGN KEY ("fk_user_technical") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -52,8 +52,8 @@ CREATE TABLE "called_services" (
     "fk_services" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME,
-    CONSTRAINT "called_services_fk_called_fkey" FOREIGN KEY ("fk_called") REFERENCES "called" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "called_services_fk_services_fkey" FOREIGN KEY ("fk_services") REFERENCES "services" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "called_services_fk_called_fkey" FOREIGN KEY ("fk_called") REFERENCES "called" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "called_services_fk_services_fkey" FOREIGN KEY ("fk_services") REFERENCES "services" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateIndex

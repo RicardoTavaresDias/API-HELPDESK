@@ -43,7 +43,7 @@ enum UserRole {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  user User @relation(fields: [fkUserTechnical], references: [id])
+  user User @relation(fields: [fkUserTechnical], references: [id], onDelete: Cascade)
 
   @@map("user_hours")
  } 
@@ -64,8 +64,8 @@ enum UserRole {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  UserCustomer User @relation("CustomerCalls", fields: [fkUserCustomer], references: [id])
-  UserTechnical User? @relation("TechnicalCalls", fields: [fkUserTechnical], references: [id])
+  UserCustomer User @relation("CustomerCalls", fields: [fkUserCustomer], references: [id], onDelete: Cascade)
+  UserTechnical User? @relation("TechnicalCalls", fields: [fkUserTechnical], references: [id], onDelete: Cascade)
   services CalledServices[]
 
   @@map("called")
@@ -96,8 +96,8 @@ enum UserRole {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  called Called @relation(fields: [fkCalled], references: [id])
-  services Services @relation(fields: [fkServices], references: [id])
+  called Called @relation(fields: [fkCalled], references: [id], onDelete: Cascade)
+  services Services @relation(fields: [fkServices], references: [id], onDelete: Cascade)
 
   @@map("called_services")
  }
