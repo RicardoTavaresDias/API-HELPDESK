@@ -55,7 +55,7 @@ enum UserRole {
  }
 
  model Called {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
   fkUserCustomer String @map("fk_user_customer")
   fkUserTechnical String? @map("fk_user_technical")
   titleCalled String @map("title_called")
@@ -91,7 +91,7 @@ enum UserRole {
 
  model CalledServices {
   id String @id @default(uuid())
-  fkCalled String @map("fk_called")
+  fkCalled Int @map("fk_called")
   fkServices String @map("fk_services")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")

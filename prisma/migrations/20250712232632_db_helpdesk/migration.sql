@@ -23,7 +23,7 @@ CREATE TABLE "user_hours" (
 
 -- CreateTable
 CREATE TABLE "called" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "fk_user_customer" TEXT NOT NULL,
     "fk_user_technical" TEXT,
     "title_called" TEXT NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE "services" (
 -- CreateTable
 CREATE TABLE "called_services" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "fk_called" TEXT NOT NULL,
+    "fk_called" INTEGER NOT NULL,
     "fk_services" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME,
