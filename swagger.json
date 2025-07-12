@@ -1176,14 +1176,14 @@
         "type": "object",
         "required": [
           "title",
-          "value"
+          "price"
         ],
         "properties": {
           "title": {
             "type": "string",
             "example": "Reparo de Computador"
           },
-          "value": {
+          "price": {
             "type": "string",
             "example": "150,00",
             "description": "Valor do serviço no formato string com vírgula para decimal."
@@ -1224,7 +1224,7 @@
                   "type": "string",
                   "example": "Reparo de Computador"
                 },
-                "value": {
+                "price": {
                   "type": "number",
                   "format": "float",
                   "example": 150.0
@@ -1259,7 +1259,7 @@
             "type": "string",
             "example": "Instalação de Software"
           },
-          "value": {
+          "price": {
             "type": "string",
             "example": "75,50",
             "description": "Valor do serviço no formato string com vírgula para decimal."
