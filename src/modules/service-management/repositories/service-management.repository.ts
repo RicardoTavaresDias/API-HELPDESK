@@ -7,11 +7,11 @@ export class ServicesRepository {
     this.prisma = prisma
   }
 
-  async create({ title, value }: ServicesSchema){
+  async create({ title, price }: ServicesSchema){
     return await this.prisma.services.create({
       data: {
         titleService: title,
-        value: value
+        price: price
       }
     })
   }
@@ -53,7 +53,7 @@ export class ServicesRepository {
       data: {
         titleService: data.title,
         serviceStatus: data.status,
-        value: data.value
+        price: data.price
       }
     })
   }

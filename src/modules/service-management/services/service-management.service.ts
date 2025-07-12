@@ -3,14 +3,14 @@ import type { ServicesSchema, StatusServicesEnum, UpdateSchemaType } from "../sc
 import Repository from "@/repositories"
 import { pagination } from "@/libs/pagination"
 
-export const createServices = async ({ title, value }: ServicesSchema) => {
+export const createServices = async ({ title, price }: ServicesSchema) => {
     const repository = new Repository()
     const serviceExistTitle = await repository.services.existServices({ title })
     if(serviceExistTitle.length){
       throw new AppError("Já existe um serviço cadastrado com esse título", 409);
     }
 
-    return await repository.services.create({ title, value })  
+    return await repository.services.create({ title, price })  
 }
 
 export const listServices = async (query: { page:string, limit: string, status: StatusServicesEnum }) => {

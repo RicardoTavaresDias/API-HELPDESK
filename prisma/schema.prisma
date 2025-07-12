@@ -60,7 +60,6 @@ enum UserRole {
   fkUserTechnical String? @map("fk_user_technical")
   titleCalled String @map("title_called")
   description String
-  fkServices String @map("fk_services")
   callStatus CalledStatus @default(open) @map("call_status")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
@@ -80,7 +79,7 @@ enum UserRole {
  model Services {
   id String @id @default(uuid())
   titleService String @map("title_service")
-  value Decimal
+  price Decimal
   serviceStatus ServicesStatus @default(active) @map("service_status")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")

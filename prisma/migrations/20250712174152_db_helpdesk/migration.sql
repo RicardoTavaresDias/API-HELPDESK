@@ -28,7 +28,6 @@ CREATE TABLE "called" (
     "fk_user_technical" TEXT,
     "title_called" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "fk_services" TEXT NOT NULL,
     "call_status" TEXT NOT NULL DEFAULT 'open',
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME,
@@ -40,7 +39,7 @@ CREATE TABLE "called" (
 CREATE TABLE "services" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title_service" TEXT NOT NULL,
-    "value" DECIMAL NOT NULL,
+    "price" DECIMAL NOT NULL,
     "service_status" TEXT NOT NULL DEFAULT 'active',
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME
