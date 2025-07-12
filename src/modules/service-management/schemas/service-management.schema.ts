@@ -2,7 +2,8 @@ import z from "zod"
 
 export const servicesSchema = z.object({
   title: z.string({ message: "Campo somente string" })
-  .min(1, { message: "Campo obrigatório" }),
+  .min(1, { message: "Campo obrigatório" })
+  .transform(title => title[0].toUpperCase().concat(title.substring(1))),
   price: z.string({ message: "Campo somente string" })
   .min(1, { message: "Campo obrigatório" })
   .transform(value => {
