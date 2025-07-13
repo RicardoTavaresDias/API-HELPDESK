@@ -1,40 +1,36 @@
 import { PrismaClient } from "@prisma/client";
+import { type CreateCalledsSchemaType, IndexUserSchemaType } from "../schemas/called.schema"
 
 export class CalledRepository {
   prisma: PrismaClient
 
-  constructor(prisma: PrismaClient){
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma
   }
 
-  async create(){ 
-    // const create =  await this.prisma.called.create({
-    //   data: {
-    //     fkUserCustomer: "c3a37d4d-4dc9-4324-9747-ff0eb1175cde",
-    //     fkUserTechnical: "f72c548e-103e-480e-97e1-e627a3ba335c",
-    //     titleCalled: "Teste chamado novo",
-    //     description: "Descrição de um chamado novo para teste.",
-    //     services: {
-    //       create: [ // Fazer map para incluir mais de um services id.
-    //         {
-    //           services: {
-    //             connect: { id: "04e3239c-7e3a-43a5-8adb-4aba49094c64" }
-    //           },
-    //         },
-    //         {
-    //           services: {
-    //             connect: { id: "67dd6f63-c40f-40d0-ad08-dfbc66722561" }
-    //           }
-    //         }
-    //       ]
-    //     }
-    //   },
-    //   include: {
-    //     services: true
-    //   }
-    // })
+  async create(data: CreateCalledsSchemaType) {
+    return await this.prisma.called.create({
+      data: {
+        fkUserCustomer: data.idCustomer,
+        fkUserTechnical: data.idTechnical,
+        titleCalled: data.titleCalled,
+        description: data.description,
+        services: {
+          create: data.idServices.map(service => ({
+            services: {
+              connect: { id: service.id }
+            }
+          }))
+        }
+      },
+      include: {
+        services: true
+      }
+    })
+  }
 
-    const index =  await this.prisma.called.findMany({
+  async indexAll({ skip, take }: { skip: number, take: number, }) {
+    return await this.prisma.called.findMany({
       select: {
         updatedAt: true,
         id: true,
@@ -65,10 +61,67 @@ export class CalledRepository {
           }
         },
         callStatus: true,
-      }
+      },
+      skip: skip,
+      take: take
     })
+  }
 
-    return index
-  }  
-     
+  async indexAllCout(){
+    return await this.prisma.called.count()
+  }
+
+  async indexUserAll(data: { skip: number, take: number } & IndexUserSchemaType) {
+    const userId = data.role === "customer" ? 
+      { fkUserCustomer: data.id } : 
+      { fkUserTechnical: data.id }
+
+    return await this.prisma.called.findMany({
+      where: userId,
+      select: {
+        updatedAt: true,
+        id: true,
+        titleCalled: true,
+        services: {
+          select: {
+            services: {
+              select: {
+                id: true,
+                titleService: true,
+                price: true
+              }
+            }
+          }
+        },
+        UserCustomer: {
+          select: {
+            id: true,
+            name: true,
+            role: true
+          }
+        },
+        UserTechnical: {
+          select: {
+            id: true,
+            name: true,
+            role: true
+          }
+        },
+        callStatus: true,
+      },
+      skip: data.skip,
+      take: data.take
+    })
+  }
+
+  async indexUserCout(data: IndexUserSchemaType){
+    const userId = data.role === "customer" ? 
+      { fkUserCustomer: data.id } : 
+      { fkUserTechnical: data.id }
+
+    return await this.prisma.called.count({
+      where: userId
+    })
+  }
+
 }
