@@ -19,3 +19,18 @@ export const indexUserSchema = z.object({
 })
 
 export type IndexUserSchemaType = z.infer<typeof indexUserSchema>
+
+export const updateStatusCalledSchema = z.object({
+  id: z.coerce.number(),
+  status: z.enum(["open", "close", "in_progress"])
+})
+
+export type UpdateStatusCalledSchemaType = z.infer<typeof updateStatusCalledSchema>
+
+export const idUpdateServicesSchema = z.object({
+  idCalled: z.coerce.number(),
+  idServices: z.string().uuid()
+})
+
+export type idUpdateServicesSchemaType = z.infer<typeof idUpdateServicesSchema>
+export type idServicesType = z.infer<typeof idUpdateServicesSchema>

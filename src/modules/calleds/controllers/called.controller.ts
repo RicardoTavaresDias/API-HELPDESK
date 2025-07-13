@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"; 
-import { createCalled, indexAllCalled, indexUser } from "../services/called.services"
-import { createCalledsSchema, indexUserSchema } from "../schemas/called.schema"
+import { createCalled, indexAllCalled, indexUser, updateStatus, createServicesCalled, removeServicesCalled } from "../services/called.services"
+import { createCalledsSchema, indexUserSchema, updateStatusCalledSchema, idUpdateServicesSchema, idUpdateServicesSchema as idServices } from "../schemas/called.schema"
 
 export class CalledsController {
   async create(request: Request, response: Response, next: NextFunction){
@@ -16,8 +16,6 @@ export class CalledsController {
       next(error)
     }
   }
-
-  
 
   async indexAll(request: Request, response: Response, next: NextFunction) {
     const { page, limit } = request.query
@@ -58,6 +56,48 @@ export class CalledsController {
       
       response.status(200).json(result)
     }catch(error){
+      next(error)
+    }
+  }
+
+  async update(request: Request, response: Response, next: NextFunction){
+    try {
+      const updateSchema = updateStatusCalledSchema.safeParse({ id: request.params.called, status: request.body.status })
+      if(!updateSchema.success){
+        return response.status(401).json({ message: updateSchema.error.issues[0].message })
+      }
+
+      await updateStatus({ id: updateSchema.data.id, status: updateSchema.data.status })
+      response.status(200).json({ message: "Status do chamado atualizado com sucesso." })
+    }catch(error) {
+      next(error)
+    }
+  }
+
+  async addServices(request: Request, response: Response, next: NextFunction) {
+    try {
+      const idUpdateCalledServices = idUpdateServicesSchema.safeParse(request.body)
+      if(!idUpdateCalledServices.success){
+        return response.status(401).json({ message: idUpdateCalledServices.error.issues[0].message })
+      }
+
+      await createServicesCalled(idUpdateCalledServices.data)
+      response.status(200).json({ message: "Serviço adicionado com sucesso." })
+    }catch(error) {
+      next(error)
+    }
+  }
+
+  async removeServices(request: Request, response: Response, next: NextFunction){
+    try {
+      const dataId = idServices.safeParse({ idCalled: request.params.called, idServices: request.params.idServices })
+      if(!dataId.success){
+        return response.status(401).json({ message: dataId.error.issues[0].message })
+      }
+
+      await removeServicesCalled(dataId.data)
+      response.status(200).json({ message: "Serviço removido com sucesso." })
+    }catch(error) {
       next(error)
     }
   }

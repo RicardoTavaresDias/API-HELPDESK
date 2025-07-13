@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { type CreateCalledsSchemaType, IndexUserSchemaType } from "../schemas/called.schema"
+import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
 
 export class CalledRepository {
   prisma: PrismaClient
@@ -124,4 +124,53 @@ export class CalledRepository {
     })
   }
 
+  async updateStatusCalled(data: UpdateStatusCalledSchemaType){
+    return await this.prisma.called.update({
+      where: {
+        id: data.id
+      },
+      data: {
+        callStatus: data.status
+      }
+    })
+  }
+
+  async createServices(data: idUpdateServicesSchemaType){
+    return await this.prisma.called.update({
+      where: {
+        id: data.idCalled
+      },
+      data: {
+        services: {
+          create: {
+            services: {
+              connect: { id: data.idServices }
+            }
+          }
+        }
+      },
+      include: {
+        services: {
+          select: {
+            services: true,
+          }
+        }
+      }
+    })
+  }
+
+  async removeServices(data: idServicesType){
+    return await this.prisma.called.update({
+      where: {
+        id: data.idCalled
+      },
+      data: {
+        services: {
+          deleteMany: {
+            fkServices: data.idServices
+          }
+        }
+      }
+    })
+  }
 }

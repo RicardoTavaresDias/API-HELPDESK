@@ -1,5 +1,5 @@
 import Repository from "@/repositories"
-import { type CreateCalledsSchemaType, IndexUserSchemaType } from "../schemas/called.schema"
+import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
 import { pagination } from "@/libs/pagination"
 
 export const createCalled = async (data: CreateCalledsSchemaType) => {
@@ -31,4 +31,19 @@ export const indexUser = async (data: { page: number, limit: number } & IndexUse
     result: rest,
     data: resultDb
   }
+}
+
+export const updateStatus = async ({ id, status }: UpdateStatusCalledSchemaType) => {
+  const repository = new Repository()
+  return await repository.called.updateStatusCalled({ id, status })
+}
+
+export const createServicesCalled = async (data: idUpdateServicesSchemaType) => {
+  const repository = new Repository()
+  return await repository.called.createServices(data)
+}
+
+export const removeServicesCalled = async (data: idServicesType) => {
+  const repository = new Repository()
+  return await repository.called.removeServices(data)
 }
