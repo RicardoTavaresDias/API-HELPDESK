@@ -35,6 +35,7 @@ export class CalledRepository {
         updatedAt: true,
         id: true,
         titleCalled: true,
+        description: true,
         services: {
           select: {
             services: {

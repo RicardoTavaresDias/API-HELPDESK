@@ -1735,6 +1735,9 @@
                 "titleCalled": {
                   "type": "string"
                 },
+                "description": {
+                  "type": "string"
+                },
                 "services": {
                   "type": "array",
                   "items": {
