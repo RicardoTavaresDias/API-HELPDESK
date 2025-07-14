@@ -1771,11 +1771,11 @@
                     "name": {
                       "type": "string"
                     },
-                    "role": {
-                      "type": "string",
-                      "enum": [
-                        "customer"
-                      ]
+                    "email": {
+                      "type": "string"
+                    },
+                    "avatar": {
+                      "type": "string"
                     }
                   }
                 },
@@ -1789,11 +1789,11 @@
                     "name": {
                       "type": "string"
                     },
-                    "role": {
-                      "type": "string",
-                      "enum": [
-                        "technical"
-                      ]
+                      "email": {
+                      "type": "string"
+                    },
+                    "avatar": {
+                      "type": "string"
                     }
                   },
                   "nullable": true
