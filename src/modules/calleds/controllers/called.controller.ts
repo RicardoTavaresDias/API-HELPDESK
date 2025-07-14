@@ -27,7 +27,16 @@ export class CalledsController {
 
     try {
       const result = await indexAllCalled({ page: Number(page), limit: Number(limit) })
-      response.status(200).json(result)
+
+      const data = result.data.map(called => {
+        const priceTotal = called.services.reduce((acc, price) => acc + parseFloat(price.services.price.toString()), 0)
+        return {
+          ...called,
+          priceTotal
+        }
+      })
+
+      response.status(200).json({ result: result.result, data })
     }catch(error){
       next(error)
     }
@@ -62,7 +71,7 @@ export class CalledsController {
 
   async update(request: Request, response: Response, next: NextFunction){
     try {
-      const updateSchema = updateStatusCalledSchema.safeParse({ id: request.params.called, status: request.body.status })
+      const updateSchema = updateStatusCalledSchema.safeParse({ id: request.params.idCalled, status: request.body.status })
       if(!updateSchema.success){
         return response.status(401).json({ message: updateSchema.error.issues[0].message })
       }
@@ -90,7 +99,7 @@ export class CalledsController {
 
   async removeServices(request: Request, response: Response, next: NextFunction){
     try {
-      const dataId = idServices.safeParse({ idCalled: request.params.called, idServices: request.params.idServices })
+      const dataId = idServices.safeParse({ idCalled: request.params.idCalled, idServices: request.params.idServices })
       if(!dataId.success){
         return response.status(401).json({ message: dataId.error.issues[0].message })
       }

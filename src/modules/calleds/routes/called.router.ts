@@ -11,5 +11,5 @@ calledRouter.post("/", userAuthorization(["admin", "customer"]), calledsControll
 calledRouter.get("/", userAuthorization(["admin"]), calledsController.indexAll)
 calledRouter.get("/user", userAuthorization(["customer", "technical"]), calledsController.indexUser)
 calledRouter.patch("/services", userAuthorization(["technical"]), calledsController.addServices)
-calledRouter.patch("/:called",userAuthorization(["admin", "technical"]), calledsController.update)
-calledRouter.delete("/:called/:idServices", userAuthorization(["technical"]), calledsController.removeServices)
+calledRouter.patch("/:idCalled",userAuthorization(["admin", "technical"]), calledsController.update)
+calledRouter.delete("/:idCalled/:idServices", userAuthorization(["technical"]), calledsController.removeServices)
