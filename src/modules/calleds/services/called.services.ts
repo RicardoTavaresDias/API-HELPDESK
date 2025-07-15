@@ -1,10 +1,20 @@
 import Repository from "@/repositories"
 import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
+import type { InputCalled } from "../types/calleds-response"
 import { pagination } from "@/libs/pagination"
+import { refactorObjectData } from "../utils/refactor-object-data"
 
 export const createCalled = async (data: CreateCalledsSchemaType) => {
   const repository = new Repository()
   return await repository.called.create(data)
+}
+
+export const indexByCalled = async (id: number) => {
+  const repository = new Repository()
+  const resultDb =  await repository.called.indexAll({ id })
+
+  const data = refactorObjectData(resultDb as InputCalled[] | [])
+  return data
 }
 
 export const indexAllCalled = async (data: { page: number, limit: number }) => {
@@ -14,9 +24,11 @@ export const indexAllCalled = async (data: { page: number, limit: number }) => {
   const { skip, ...rest } = resultPagination
 
   const resultDb = await repository.called.indexAll({ skip: skip, take: data.limit })
+  const resultMap = refactorObjectData(resultDb as InputCalled[] | [])
+
   return {
     result: rest,
-    data: resultDb
+    data: resultMap
   }
 }
 

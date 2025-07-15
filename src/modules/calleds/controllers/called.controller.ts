@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"; 
-import { createCalled, indexAllCalled, indexUser, updateStatus, createServicesCalled, removeServicesCalled } from "../services/called.services"
+import { createCalled, indexAllCalled, indexUser, updateStatus, createServicesCalled, removeServicesCalled, indexByCalled } from "../services/called.services"
 import { createCalledsSchema, indexUserSchema, updateStatusCalledSchema, idUpdateServicesSchema, idUpdateServicesSchema as idServices } from "../schemas/called.schema"
 
 export class CalledsController {
@@ -17,6 +17,20 @@ export class CalledsController {
     }
   }
 
+  async indexCalledId(request: Request, response: Response, next: NextFunction) {
+    const id = request.params.id
+    if(!id){
+      response.status(400).json({ message: "Id inválido." })
+    }
+
+    try {
+      const result = await indexByCalled(Number(id))
+      response.status(200).json(result)
+    }catch(error) {
+      next(error)
+    }
+  } 
+
   async indexAll(request: Request, response: Response, next: NextFunction) {
     const { page, limit } = request.query
     if(!page || !Number(page) || (!limit || !Number(limit))){
@@ -27,19 +41,7 @@ export class CalledsController {
 
     try {
       const result = await indexAllCalled({ page: Number(page), limit: Number(limit) })
-
-      const data = result.data.map(called => {
-        const priceTotal = called.services.reduce((acc, price) => acc + parseFloat(price.services.price.toString()), 0)
-        const services = called.services.map(service => ({ id: service.services.id, titleService: service.services.titleService, price: service.services.price }))
-
-        return {
-          ...called,
-          services,
-          priceTotal
-        }
-      })
-
-      response.status(200).json({ result: result.result, data })
+      response.status(200).json(result)
     }catch(error){
       next(error)
     }

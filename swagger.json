@@ -1047,10 +1047,73 @@
         }
       }
     },
+    "/called/{id}": {
+      "get": {
+        "description": "Retorna os detalhes de um chamado específico pelo ID. Apenas administradores podem acessar esta rota.",
+        "summary": "Buscar Chamado por ID (Admin)",
+        "tags": [
+          "Calleds"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do chamado a ser buscado.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes do chamado retornados com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Called by Id Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID do chamado inválido.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Id inválido."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado."
+          },
+          "403": {
+            "description": "Acesso negado (somente administradores podem acessar esta rota)."
+          },
+          "404": {
+            "description": "Chamado não encontrado."
+          }
+        }
+      }
+    },
     "/calleds/services": {
       "patch": {
-        "description": "Adiciona um serviço a um chamado existente. Apenas técnicos podem adicionar serviços.",
-        "summary": "Adicionar Serviço a Chamado",
+        "description": "Adiciona um serviço a um chamado existente. Apenas técnicos e administradores podem adicionar serviços aos chamados.",
+        "summary": "Adicionar serviço ao Chamado",
         "tags": [
           "Calleds"
         ],
@@ -1071,7 +1134,7 @@
         },
         "responses": {
           "200": {
-            "description": "Serviço adicionado com sucesso.",
+            "description": "Serviço adicionado ao chamado com sucesso.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1086,22 +1149,41 @@
               }
             }
           },
+          "400": {
+            "description": "Dados inválidos (ex: ID do chamado ou serviço inválido).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Id do chamado inválido."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
-            "description": "Não autenticado ou dados de validação de esquema inválidos."
+            "description": "Não autenticado."
           },
           "403": {
-            "description": "Acesso negado."
+            "description": "Acesso negado (somente técnicos e administradores podem adicionar serviços aos chamados)."
           },
           "404": {
             "description": "Chamado ou serviço não encontrado."
+          },
+          "409": {
+            "description": "Serviço já existe neste chamado."
           }
         }
       }
     },
     "/calleds/{idCalled}": {
       "patch": {
-        "description": "Atualiza o status de um chamado existente. Apenas administradores e técnicos podem atualizar o status.",
-        "summary": "Atualizar Status do Chamado",
+        "description": "Atualiza o status de um chamado. Apenas administradores e técnicos podem atualizar o status de um chamado.",
+        "summary": "Atualizar Status do Chamado (Admin/Technical)",
         "tags": [
           "Calleds"
         ],
@@ -1112,9 +1194,9 @@
         ],
         "parameters": [
           {
-            "name": "called",
+            "name": "idCalled",
             "in": "path",
-            "description": "ID do chamado a ser atualizado.",
+            "description": "ID do chamado cujo status será atualizado.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1149,8 +1231,24 @@
               }
             }
           },
+          "400": {
+            "description": "Dados inválidos (ex: ID do chamado ou status inválido).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Status inválido."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
-            "description": "Não autenticado ou dados de validação de esquema inválidos."
+            "description": "Não autenticado."
           },
           "403": {
             "description": "Acesso negado."
@@ -1163,8 +1261,8 @@
     },
     "/calleds/{idCalled}/{idServices}": {
       "delete": {
-        "description": "Remove um serviço de um chamado existente. Apenas técnicos podem remover serviços.",
-        "summary": "Remover Serviço de Chamado",
+        "description": "Remove um serviço de um chamado existente. Apenas técnicos podem remover serviços dos chamados.",
+        "summary": "Remover Serviço do Chamado (Technical)",
         "tags": [
           "Calleds"
         ],
@@ -1175,7 +1273,7 @@
         ],
         "parameters": [
           {
-            "name": "called",
+            "name": "idCalled",
             "in": "path",
             "description": "ID do chamado do qual o serviço será removido.",
             "required": true,
@@ -1198,7 +1296,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Serviço removido com sucesso.",
+            "description": "Serviço removido do chamado com sucesso.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1213,11 +1311,27 @@
               }
             }
           },
+          "400": {
+            "description": "Dados inválidos (ex: ID do chamado ou serviço inválido).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Id do chamado ou serviço inválido."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
-            "description": "Não autenticado ou dados de validação de esquema inválidos."
+            "description": "Não autenticado."
           },
           "403": {
-            "description": "Acesso negado."
+            "description": "Acesso negado (somente técnicos podem remover serviços dos chamados)."
           },
           "404": {
             "description": "Chamado ou serviço não encontrado no chamado."
@@ -1227,13 +1341,6 @@
     }
   },
   "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
     "schemas": {
       "Login": {
         "type": "object",
@@ -1241,7 +1348,7 @@
           "email": {
             "type": "string",
             "format": "email",
-            "example": "admin@example.com"
+            "example": "test@example.com"
           },
           "password": {
             "type": "string",
@@ -1262,14 +1369,17 @@
             "properties": {
               "id": {
                 "type": "string",
-                "format": "uuid"
+                "format": "uuid",
+                "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "example": "João da Silva"
               },
               "email": {
                 "type": "string",
-                "format": "email"
+                "format": "email",
+                "example": "joao.silva@example.com"
               },
               "role": {
                 "type": "string",
@@ -1277,14 +1387,13 @@
                   "admin",
                   "customer",
                   "technical"
-                ]
+                ],
+                "example": "customer"
               },
               "avatar": {
                 "type": "string",
-                "nullable": true
-              },
-              "active": {
-                "type": "boolean"
+                "nullable": true,
+                "example": "http://localhost:3333/user/avatar/avatar.png"
               },
               "createdAt": {
                 "type": "string",
@@ -1297,63 +1406,80 @@
             }
           },
           "token": {
-            "type": "string"
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           }
         }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
+          },
+          "name": {
+            "type": "string",
+            "example": "Nome do Usuário"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "usuario@example.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "customer",
+              "technical",
+              "admin"
+            ],
+            "example": "customer"
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true,
+            "example": "http://localhost:3333/user/avatar/avatar.png"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "role",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "List Users Response": {
         "type": "object",
         "properties": {
-          "result": {
-            "type": "object",
-            "properties": {
-              "totalItems": {
-                "type": "integer"
-              },
-              "currentPage": {
-                "type": "integer"
-              },
-              "totalPages": {
-                "type": "integer"
-              },
-              "nextPage": {
-                "type": "integer",
-                "nullable": true
-              },
-              "prevPage": {
-                "type": "integer",
-                "nullable": true
-              }
-            }
-          },
-          "data": {
+          "users": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "email": {
-                  "type": "string",
-                  "format": "email"
-                },
-                "role": {
-                  "type": "string",
-                  "enum": [
-                    "customer",
-                    "technical"
-                  ]
-                },
-                "active": {
-                  "type": "boolean"
-                }
-              }
+              "$ref": "#/components/schemas/User"
             }
+          },
+          "currentPage": {
+            "type": "integer",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "integer",
+            "example": 5
+          },
+          "totalUsers": {
+            "type": "integer",
+            "example": 45
           }
         }
       },
@@ -1362,17 +1488,17 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "João Silva"
+            "example": "Novo Cliente"
           },
           "email": {
             "type": "string",
             "format": "email",
-            "example": "joao.silva@example.com"
+            "example": "novo.cliente@example.com"
           },
           "password": {
             "type": "string",
             "format": "password",
-            "example": "securepassword"
+            "example": "senhaSegura123"
           }
         },
         "required": [
@@ -1386,17 +1512,17 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "Maria Tech"
+            "example": "Novo Técnico"
           },
           "email": {
             "type": "string",
             "format": "email",
-            "example": "maria.tech@example.com"
+            "example": "novo.tecnico@example.com"
           },
           "password": {
             "type": "string",
             "format": "password",
-            "example": "technicalpass"
+            "example": "senhaSegura456"
           }
         },
         "required": [
@@ -1410,29 +1536,31 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "example": "Nome do Usuário"
           },
           "email": {
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "example": "usuario@example.com"
           },
           "role": {
             "type": "string",
             "enum": [
-              "admin",
               "customer",
-              "technical"
-            ]
+              "technical",
+              "admin"
+            ],
+            "example": "customer"
           },
           "avatar": {
             "type": "string",
-            "nullable": true
-          },
-          "active": {
-            "type": "boolean"
+            "nullable": true,
+            "example": "http://localhost:3333/user/avatar/avatar.png"
           },
           "createdAt": {
             "type": "string",
@@ -1449,45 +1577,46 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "João Updated"
+            "example": "Nome Atualizado"
           },
           "email": {
             "type": "string",
             "format": "email",
-            "example": "joao.updated@example.com"
+            "example": "email.atualizado@example.com"
           },
           "oldPassword": {
             "type": "string",
             "format": "password",
-            "example": "oldpassword"
+            "example": "senhaAntiga"
           },
           "newPassword": {
             "type": "string",
             "format": "password",
-            "example": "newsecurepassword"
+            "example": "novaSenhaSegura"
           },
           "avatar": {
             "type": "string",
             "format": "binary"
           }
-        }
+        },
+        "required": []
       },
       "PasswordUpdate": {
         "type": "object",
         "properties": {
-          "oldPassword": {
+          "currentPassword": {
             "type": "string",
-            "format": "password",
-            "example": "currentPassword123"
+            "example": "senhaAtual123",
+            "description": "A senha atual do usuário."
           },
           "newPassword": {
             "type": "string",
-            "format": "password",
-            "example": "newStrongPassword456"
+            "example": "novaSenhaSegura!",
+            "description": "A nova senha para o usuário. Deve ter no mínimo 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial."
           }
         },
         "required": [
-          "oldPassword",
+          "currentPassword",
           "newPassword"
         ]
       },
@@ -1496,16 +1625,35 @@
         "properties": {
           "titleService": {
             "type": "string",
-            "example": "Suporte Técnico Nível 1"
-          },
-          "description": {
-            "type": "string",
-            "example": "Atendimento inicial para problemas comuns."
+            "example": "Formatação de Computador"
           },
           "price": {
             "type": "number",
             "format": "float",
-            "example": 50.00
+            "example": 150.00
+          }
+        },
+        "required": [
+          "titleService",
+          "price"
+        ]
+      },
+      "Service": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+          },
+          "titleService": {
+            "type": "string",
+            "example": "Formatação de Computador"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 150.00
           },
           "status": {
             "type": "string",
@@ -1514,75 +1662,45 @@
               "inactive"
             ],
             "example": "active"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "required": [
+          "id",
           "titleService",
-          "description",
-          "price"
+          "price",
+          "status",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "List Services Response": {
         "type": "object",
         "properties": {
-          "result": {
-            "type": "object",
-            "properties": {
-              "totalItems": {
-                "type": "integer"
-              },
-              "currentPage": {
-                "type": "integer"
-              },
-              "totalPages": {
-                "type": "integer"
-              },
-              "nextPage": {
-                "type": "integer",
-                "nullable": true
-              },
-              "prevPage": {
-                "type": "integer",
-                "nullable": true
-              }
-            }
-          },
-          "data": {
+          "services": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "titleService": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "price": {
-                  "type": "number",
-                  "format": "float"
-                },
-                "status": {
-                  "type": "string",
-                  "enum": [
-                    "active",
-                    "inactive"
-                  ]
-                },
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "updatedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              }
+              "$ref": "#/components/schemas/Service"
             }
+          },
+          "currentPage": {
+            "type": "integer",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "integer",
+            "example": 3
+          },
+          "totalServices": {
+            "type": "integer",
+            "example": 25
           }
         }
       },
@@ -1591,24 +1709,25 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
           },
           "titleService": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
+            "type": "string",
+            "example": "Instalação de Software"
           },
           "price": {
             "type": "number",
-            "format": "float"
+            "format": "float",
+            "example": 75.50
           },
           "status": {
             "type": "string",
             "enum": [
               "active",
               "inactive"
-            ]
+            ],
+            "example": "active"
           },
           "createdAt": {
             "type": "string",
@@ -1625,16 +1744,12 @@
         "properties": {
           "titleService": {
             "type": "string",
-            "example": "Suporte Técnico Nível 2"
-          },
-          "description": {
-            "type": "string",
-            "example": "Atendimento avançado para problemas complexos."
+            "example": "Manutenção de Hardware"
           },
           "price": {
             "type": "number",
             "format": "float",
-            "example": 75.00
+            "example": 200.00
           },
           "status": {
             "type": "string",
@@ -1642,39 +1757,36 @@
               "active",
               "inactive"
             ],
-            "example": "active"
+            "example": "inactive"
           }
         }
       },
       "Create Called": {
         "type": "object",
         "properties": {
-          "idCustomer": {
-            "type": "string",
-            "format": "uuid",
-            "description": "ID do cliente que está abrindo o chamado.",
-            "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
-          },
-          "idTechnical": {
-            "type": "string",
-            "format": "uuid",
-            "description": "ID do técnico atribuído ao chamado (opcional).",
-            "nullable": true,
-            "example": "f1f2e3d4-c5b6-a789-0123-456789abcdef"
-          },
           "titleCalled": {
             "type": "string",
-            "description": "Título do chamado.",
-            "example": "Problema com conexão de internet"
+            "example": "Computador não liga"
           },
           "description": {
             "type": "string",
-            "description": "Descrição detalhada do problema.",
-            "example": "Minha internet está caindo constantemente, preciso de ajuda para resolver."
+            "example": "Meu computador não está ligando desde ontem. Já tentei reiniciar várias vezes, mas não funciona."
+          },
+          "idUserCustomer": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID do usuário cliente que está abrindo o chamado. (Será preenchido automaticamente com o ID do usuário logado se a role for 'customer'.)",
+            "example": "e7c5b9a1-8d2f-4c3e-9b0d-1a2b3c4d5e6f"
+          },
+          "idUserTechnical": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID do usuário técnico atribuído ao chamado (opcional).",
+            "nullable": true,
+            "example": "f8a7b6c5-4d3e-2f1a-0b9c-8d7e6f5a4b3c"
           },
           "idServices": {
             "type": "array",
-            "description": "Lista de IDs dos serviços relacionados a este chamado.",
             "items": {
               "type": "object",
               "properties": {
@@ -1683,167 +1795,247 @@
                   "format": "uuid",
                   "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
                 }
-              }
+              },
+              "required": [
+                "id"
+              ]
             },
-            "minItems": 1
+            "description": "Lista de IDs dos serviços a serem associados ao chamado."
           }
         },
         "required": [
-          "idCustomer",
           "titleCalled",
           "description",
-          "idServices"
+          "idUserCustomer"
+        ]
+      },
+      "Called": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "titleCalled": {
+            "type": "string",
+            "example": "Computador não liga"
+          },
+          "description": {
+            "type": "string",
+            "example": "Meu computador não está ligando desde ontem. Já tentei reiniciar várias vezes, mas não funciona."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "titleService": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number",
+                  "format": "float"
+                }
+              }
+            }
+          },
+          "UserCustomer": {
+            "$ref": "#/components/schemas/User"
+          },
+          "UserTechnical": {
+            "$ref": "#/components/schemas/User"
+          },
+          "callStatus": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in_progress",
+              "completed",
+              "canceled"
+            ],
+            "example": "pending"
+          },
+          "priceTotal": {
+            "type": "number",
+            "format": "float",
+            "description": "Soma total dos preços dos serviços associados ao chamado.",
+            "example": 225.50
+          }
+        },
+        "required": [
+          "id",
+          "titleCalled",
+          "description",
+          "createdAt",
+          "updatedAt",
+          "services",
+          "UserCustomer",
+          "callStatus",
+          "priceTotal"
         ]
       },
       "List Calleds Response": {
         "type": "object",
         "properties": {
-          "result": {
-            "type": "object",
-            "properties": {
-              "totalItems": {
-                "type": "integer"
-              },
-              "currentPage": {
-                "type": "integer"
-              },
-              "totalPages": {
-                "type": "integer"
-              },
-              "nextPage": {
-                "type": "integer",
-                "nullable": true
-              },
-              "prevPage": {
-                "type": "integer",
-                "nullable": true
-              }
+          "calleds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Called"
             }
           },
-          "data": {
+          "currentPage": {
+            "type": "integer",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "integer",
+            "example": 5
+          },
+          "totalCalleds": {
+            "type": "integer",
+            "example": 45
+          }
+        }
+      },
+      "Called by Id Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "titleCalled": {
+            "type": "string",
+            "example": "Computador não liga"
+          },
+          "description": {
+            "type": "string",
+            "example": "Meu computador não está ligando desde ontem. Já tentei reiniciar várias vezes, mas não funciona."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "services": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "updatedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
                 "id": {
-                  "type": "integer"
-                },
-                "titleCalled": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "services": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "services": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "titleService": {
-                            "type": "string"
-                          },
-                          "price": {
-                            "type": "number"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "UserCustomer": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "avatar": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "UserTechnical": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                      "email": {
-                      "type": "string"
-                    },
-                    "avatar": {
-                      "type": "string"
-                    }
-                  },
-                  "nullable": true
-                },
-                "callStatus": {
                   "type": "string",
-                  "enum": [
-                    "open",
-                    "close",
-                    "in_progress"
-                  ]
+                  "format": "uuid"
                 },
-                "priceTotal": {
-                  "type": "number"
+                "titleService": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number",
+                  "format": "float"
                 }
               }
-            }
-          }
-        }
-      },
-      "Update Called Status": {
-        "type": "object",
-        "properties": {
-          "status": {
+            },
+            "description": "Lista de serviços associados a este chamado."
+          },
+          "UserCustomer": {
+            "$ref": "#/components/schemas/User",
+            "description": "Informações do cliente que abriu o chamado."
+          },
+          "UserTechnical": {
+            "$ref": "#/components/schemas/User",
+            "description": "Informações do técnico atribuído ao chamado (se houver)."
+          },
+          "callStatus": {
             "type": "string",
             "enum": [
-              "open",
-              "close",
-              "in_progress"
+              "pending",
+              "in_progress",
+              "completed",
+              "canceled"
             ],
-            "description": "Novo status do chamado.",
-            "example": "in_progress"
+            "example": "pending",
+            "description": "O status atual do chamado."
+          },
+          "priceTotal": {
+            "type": "number",
+            "format": "float",
+            "description": "O preço total de todos os serviços associados ao chamado.",
+            "example": 225.50
           }
-        },
-        "required": [
-          "status"
-        ]
+        }
       },
       "Add Service to Called": {
         "type": "object",
         "properties": {
-          "idCalled": {
+          "calledId": {
             "type": "integer",
             "description": "ID do chamado ao qual o serviço será adicionado.",
+            "example": 1
+          },
+          "serviceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID do serviço a ser adicionado ao chamado.",
+            "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+          }
+        },
+        "required": [
+          "calledId",
+          "serviceId"
+        ]
+      },
+      "Update Called Status": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do chamado cujo status será atualizado.",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in_progress",
+              "completed",
+              "canceled"
+            ],
+            "description": "O novo status do chamado.",
+            "example": "in_progress"
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ]
+      },
+      "Remove Service from Called": {
+        "type": "object",
+        "properties": {
+          "idCalled": {
+            "type": "integer",
+            "description": "ID do chamado do qual o serviço será removido.",
             "example": 1
           },
           "idServices": {
             "type": "string",
             "format": "uuid",
-            "description": "ID do serviço a ser adicionado.",
+            "description": "ID do serviço a ser removido do chamado.",
             "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
           }
         },
@@ -1851,6 +2043,14 @@
           "idCalled",
           "idServices"
         ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token JWT de autenticação."
       }
     }
   }

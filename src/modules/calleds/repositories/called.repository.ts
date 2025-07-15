@@ -29,8 +29,11 @@ export class CalledRepository {
     })
   }
 
-  async indexAll({ skip, take }: { skip: number, take: number, }) {
+  async indexAll({ skip, take, id }: { skip?: number, take?: number, id?: number}) {
     return await this.prisma.called.findMany({
+      where: {
+        id: id
+      },
       select: {
         updatedAt: true,
         id: true,
