@@ -1,4 +1,5 @@
 import { InputCalled } from "../types/calleds-response"
+import { basePrice } from "@/libs/basePrice"
 
 const refactorObjectData = (data: InputCalled[]) => {
   const result = data.map(called => {
@@ -8,7 +9,8 @@ const refactorObjectData = (data: InputCalled[]) => {
     return {
       ...called,
       services,
-      priceTotal
+      priceTotal,
+      basePrice
     }
   })
 
