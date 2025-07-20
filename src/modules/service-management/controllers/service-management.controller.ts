@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { listServices, updateServices, createServices } from "../services/service-management.service";
+import { ServicesManagement } from "../services/service-management.service";
 import type { StatusServicesEnum } from "../schemas/service-management.schema"
 import { servicesSchema, statusServicesEnum, updateSchema } from "../schemas/service-management.schema"
 import type { UpdateSchemaType } from "../schemas/service-management.schema"
+
+const servicesManagement = new ServicesManagement()
 
 export class ServicesController {
   async create(request: Request, response: Response, next: NextFunction){
@@ -12,7 +14,7 @@ export class ServicesController {
     }
 
     try {
-      await createServices(services.data)
+      await servicesManagement.createServices(services.data)
       return response.status(201).json({ message: "Serviço cadastrado com sucesso." })
     }catch(error) {
       next(error)
@@ -33,7 +35,7 @@ export class ServicesController {
     }
 
     try {
-      const indexServices = await listServices(request.query as { page: string, limit: string, status: StatusServicesEnum })
+      const indexServices = await servicesManagement.listServices(request.query as { page: string, limit: string, status: StatusServicesEnum })
       response.status(200).json(indexServices)
     } catch(error) {
       next(error)
@@ -52,7 +54,7 @@ export class ServicesController {
     }
 
     try {
-      await updateServices(
+      await servicesManagement.updateServices(
         { id: request.params.id, data: schemaUpdate.data } as { id: string, data: UpdateSchemaType }
       )
       response.status(200).json({ message: "Dados atualizado com sucesso" })

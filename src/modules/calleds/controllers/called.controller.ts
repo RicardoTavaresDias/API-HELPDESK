@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express"; 
-import { createCalled, indexAllCalled, indexUser, updateStatus, createServicesCalled, removeServicesCalled, indexByCalled } from "../services/called.services"
+import { ServiceCalled } from "../services/called.services"
 import { createCalledsSchema, indexUserSchema, updateStatusCalledSchema, idUpdateServicesSchema, idUpdateServicesSchema as idServices } from "../schemas/called.schema"
+
+const serviceCalled = new ServiceCalled()
 
 export class CalledsController {
   async create(request: Request, response: Response, next: NextFunction){
@@ -10,7 +12,7 @@ export class CalledsController {
         return response.status(401).json({ message: createSchema.error.issues[0].message })
       }
 
-      const result = await createCalled(createSchema.data)
+      const result = await serviceCalled.createCalled(createSchema.data)
       response.status(201).json({ message: "Chamado criado com sucesso." })
     }catch(error){
       next(error)
@@ -24,7 +26,7 @@ export class CalledsController {
     }
 
     try {
-      const result = await indexByCalled(Number(id))
+      const result = await serviceCalled.indexByCalled(Number(id))
       response.status(200).json(result)
     }catch(error) {
       next(error)
@@ -40,7 +42,7 @@ export class CalledsController {
     } 
 
     try {
-      const result = await indexAllCalled({ page: Number(page), limit: Number(limit) })
+      const result = await serviceCalled.indexAllCalled({ page: Number(page), limit: Number(limit) })
       response.status(200).json(result)
     }catch(error){
       next(error)
@@ -61,7 +63,7 @@ export class CalledsController {
         return response.status(401).json({ message: userSchema.error.issues[0].message })
       }
 
-      const result = await indexUser({
+      const result = await serviceCalled.indexUser({
          page: Number(page), 
          limit: Number(limit), 
          id: userSchema.data.id, 
@@ -81,7 +83,7 @@ export class CalledsController {
         return response.status(401).json({ message: updateSchema.error.issues[0].message })
       }
 
-      await updateStatus({ id: updateSchema.data.id, status: updateSchema.data.status })
+      await serviceCalled.updateStatus({ id: updateSchema.data.id, status: updateSchema.data.status })
       response.status(200).json({ message: "Status do chamado atualizado com sucesso." })
     }catch(error) {
       next(error)
@@ -95,7 +97,7 @@ export class CalledsController {
         return response.status(401).json({ message: idUpdateCalledServices.error.issues[0].message })
       }
 
-      await createServicesCalled(idUpdateCalledServices.data)
+      await serviceCalled.createServicesCalled(idUpdateCalledServices.data)
       response.status(200).json({ message: "Serviço adicionado com sucesso." })
     }catch(error) {
       next(error)
@@ -109,7 +111,7 @@ export class CalledsController {
         return response.status(401).json({ message: dataId.error.issues[0].message })
       }
 
-      await removeServicesCalled(dataId.data)
+      await serviceCalled.removeServicesCalled(dataId.data)
       response.status(200).json({ message: "Serviço removido com sucesso." })
     }catch(error) {
       next(error)

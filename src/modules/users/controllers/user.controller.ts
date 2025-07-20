@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { createUserCustomer, createUserTechnical, listAll, removerUser, updateUser, indexByUser, removeAvatar, updatePassword } from "../services/user.service";
+import { UserServices } from "../services/user.service";
 import { passwordSchema, technicalSchema, updateUserSchema, userSchema } from "../schemas/user.schema"
+
+const userServices = new UserServices()
 
 export class UserController {
   async createCustomer(request: Request, response: Response, next: NextFunction){
@@ -10,7 +12,7 @@ export class UserController {
           return response.status(400).json({ message: userCustomer.error.issues[0].message })
         }
 
-      await createUserCustomer(userCustomer.data)
+      await userServices.createUserCustomer(userCustomer.data)
       response.status(201).json({ message: "Cadastro concluído com sucesso" })
     } catch(error: any){
       next(error)
@@ -24,7 +26,7 @@ export class UserController {
         return response.status(400).json({ message: userTechnical.error.issues[0].message })
       }
 
-      await createUserTechnical(userTechnical.data)
+      await userServices.createUserTechnical(userTechnical.data)
       response.status(201).json({ message: "Cadastro concluído com sucesso" })
     } catch(error: any){
       next(error)
@@ -44,7 +46,7 @@ export class UserController {
     }
 
     try {
-      const users = await listAll({ page: Number(page), limit: Number(limit), role: request.params.role })
+      const users = await userServices.listAll({ page: Number(page), limit: Number(limit), role: request.params.role })
       if(!users.data){
         return response.status(404).json({ message: "Perfil inválido fornecido." })
       }
@@ -56,44 +58,12 @@ export class UserController {
 
   async showUser(request: Request, response: Response, next: NextFunction) {
     try {
-      const byUser = await indexByUser(request.params.id)
+      const byUser = await userServices.indexByUser(request.params.id)
       response.status(200).json(byUser)
     } catch (error) {
       next(error)
     }
   }
-
-  /**
-   * 
-   * const [form, setForm] = useState({
-      name: 'Jussara',
-      email: 'jussara@email.com',
-      password: '123456',
-      role: 'technical',
-      hours: [
-        {
-          startTime: "2025-06-21T17:08:00.003Z",
-          endTime: "2025-06-21T17:12:00.003Z"
-        },
-        {
-          startTime: "2025-06-21T17:14:00.003Z",
-          endTime: "2025-06-21T17:18:00.003Z"
-        }
-      ]
-    });
-   * 
-   * Envia o JSON como campo de texto (igual no Insomnia)
-   * formData.append("data", JSON.stringify(form)); <= passando objeto para body
-   * 
-   * formData.append("file", avatarFile)
-   * 
-   * const response = await fetch("http://localhost:3333/user", {
-        method: "PATH",
-        body: formData,
-      });
-   *
-   *   
-   */
 
   async update(request: Request, response: Response, next: NextFunction) {
     try {
@@ -111,7 +81,7 @@ export class UserController {
       }
 
       const data = request.file ? { ...user.data, avatar: request.file.filename } : user.data
-      const responseUpdateUser = await updateUser({ id: idUser, dataUpdate: data})
+      const responseUpdateUser = await userServices.updateUser({ id: idUser, dataUpdate: data})
       response.status(200).json(responseUpdateUser)
     } catch (error) {
       next(error)
@@ -124,7 +94,7 @@ export class UserController {
       if(!id){
         return response.status(401).json({ message: "Informe id do usuário" })
       }
-      await removerUser(id)
+      await userServices.removerUser(id)
       response.status(200).json({ message: "Usuário excluido com sucesso." })
     } catch (error) {
       next(error)
@@ -138,7 +108,7 @@ export class UserController {
         return response.status(401).json({ message: "Informe id do usuário" })
       }
 
-      const resultRemove = await removeAvatar(id)
+      const resultRemove = await userServices.removeAvatar(id)
 
       response.status(200).json(resultRemove.result)
     } catch (error) {
@@ -153,7 +123,7 @@ export class UserController {
         return response.status(400).json({ message: newPasswordSchema.error.issues[0].message })
       }
 
-      await updatePassword({ 
+      await userServices.updatePassword({ 
         id: request.params.id, 
         newPassword: newPasswordSchema.data.newPassword, 
         oldPassaword: newPasswordSchema.data.oldPassword 
