@@ -7,7 +7,11 @@ import swaggerUi from "swagger-ui-express"
 import swaggerDocument from "../swagger.json"
 
 const app = express()
-app.use(cors())
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}))
+
 app.use(express.json())
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
