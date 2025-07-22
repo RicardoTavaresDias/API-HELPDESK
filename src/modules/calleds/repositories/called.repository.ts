@@ -89,6 +89,7 @@ export class CalledRepository {
         updatedAt: true,
         id: true,
         titleCalled: true,
+        createdAt: true,
         services: {
           select: {
             services: {
@@ -104,14 +105,15 @@ export class CalledRepository {
           select: {
             id: true,
             name: true,
-            role: true
+            avatar: true
           }
         },
         UserTechnical: {
           select: {
             id: true,
             name: true,
-            role: true
+            email: true,
+            avatar: true
           }
         },
         callStatus: true,

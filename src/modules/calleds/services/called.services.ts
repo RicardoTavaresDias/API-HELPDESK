@@ -38,9 +38,11 @@ class ServiceCalled {
     const { skip, ...rest } = resultPagination
 
     const resultDb =  await this.repository.called.indexUserAll({ skip: skip, take: data.limit, id: data.id, role: data.role })
+    const resultMap = refactorObjectData(resultDb as InputCalled[] | [])
+
     return {
       result: rest,
-      data: resultDb
+      data: resultMap
     }
   }
 
