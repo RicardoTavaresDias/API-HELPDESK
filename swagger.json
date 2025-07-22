@@ -1049,8 +1049,8 @@
     },
     "/called/{id}": {
       "get": {
-        "description": "Retorna os detalhes de um chamado específico pelo ID. Apenas administradores podem acessar esta rota.",
-        "summary": "Buscar Chamado por ID (Admin)",
+        "description": "Retorna os detalhes de um chamado específico pelo ID",
+        "summary": "Buscar Chamado por ID",
         "tags": [
           "Calleds"
         ],
