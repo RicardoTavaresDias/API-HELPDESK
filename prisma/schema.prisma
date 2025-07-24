@@ -60,6 +60,7 @@ enum UserRole {
   fkUserTechnical String? @map("fk_user_technical")
   titleCalled String @map("title_called")
   description String
+  basePrice Decimal
   callStatus CalledStatus @default(open) @map("call_status")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")

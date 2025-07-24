@@ -9,8 +9,7 @@ const refactorObjectData = (data: InputCalled[]) => {
     return {
       ...called,
       services,
-      priceTotal,
-      basePrice
+      priceTotal
     }
   })
 

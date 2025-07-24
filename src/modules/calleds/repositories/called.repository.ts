@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
 import { AppError } from "@/utils/AppError";
+import { basePrice } from "@/libs/basePrice"
 
 export class CalledRepository {
   prisma: PrismaClient
@@ -28,6 +29,7 @@ export class CalledRepository {
         fkUserTechnical: data.idTechnical,
         titleCalled: data.titleCalled,
         description: data.description,
+        basePrice: Number(basePrice.price),
         services: {
           create: copyServices.map(calledService => ({
             fkServices: calledService.id,
@@ -53,6 +55,7 @@ export class CalledRepository {
         titleCalled: true,
         description: true,
         createdAt: true,
+        basePrice: true,
         services: {
           select: {
             fkServices: true,
@@ -99,6 +102,7 @@ export class CalledRepository {
         id: true,
         titleCalled: true,
         createdAt: true,
+        basePrice: true,
         services: {
           select: {
             fkServices: true,

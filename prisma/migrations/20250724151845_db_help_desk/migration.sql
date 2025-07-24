@@ -28,6 +28,7 @@ CREATE TABLE "called" (
     "fk_user_technical" TEXT,
     "title_called" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "basePrice" DECIMAL NOT NULL,
     "call_status" TEXT NOT NULL DEFAULT 'open',
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME,
