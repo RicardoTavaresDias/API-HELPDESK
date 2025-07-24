@@ -50,6 +50,8 @@ CREATE TABLE "called_services" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "fk_called" INTEGER NOT NULL,
     "fk_services" TEXT NOT NULL,
+    "title_service" TEXT NOT NULL,
+    "price" DECIMAL NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME,
     CONSTRAINT "called_services_fk_called_fkey" FOREIGN KEY ("fk_called") REFERENCES "called" ("id") ON DELETE CASCADE ON UPDATE CASCADE,

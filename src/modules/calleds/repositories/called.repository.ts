@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
+import { AppError } from "@/utils/AppError";
 
 export class CalledRepository {
   prisma: PrismaClient
@@ -9,6 +10,18 @@ export class CalledRepository {
   }
 
   async create(data: CreateCalledsSchemaType) {
+    const copyServices = await this.prisma.services.findMany({
+      where: {
+        id: {
+          in: data.idServices.map(service => service.id)
+        } 
+      }
+    })
+
+    if (!copyServices.length) {
+      throw new AppError("Alguns serviços não foram encontrados.", 400)
+    }
+    
     return await this.prisma.called.create({
       data: {
         fkUserCustomer: data.idCustomer,
@@ -16,16 +29,16 @@ export class CalledRepository {
         titleCalled: data.titleCalled,
         description: data.description,
         services: {
-          create: data.idServices.map(service => ({
-            services: {
-              connect: { id: service.id }
-            }
+          create: copyServices.map(calledService => ({
+            fkServices: calledService.id,
+            titleService: calledService.titleService,
+            price: calledService.price
           }))
         }
       },
       include: {
-        services: true
-      }
+      services: true
+    }
     })
   }
 
@@ -42,13 +55,9 @@ export class CalledRepository {
         createdAt: true,
         services: {
           select: {
-            services: {
-              select: {
-                id: true,
-                titleService: true,
-                price: true
-              }
-            }
+            fkServices: true,
+            titleService: true,
+            price: true
           }
         },
         UserCustomer: {
@@ -84,7 +93,7 @@ export class CalledRepository {
       { fkUserTechnical: data.id }
 
     return await this.prisma.called.findMany({
-      where: userId,
+      where: userId ,
       select: {
         updatedAt: true,
         id: true,
@@ -92,13 +101,9 @@ export class CalledRepository {
         createdAt: true,
         services: {
           select: {
-            services: {
-              select: {
-                id: true,
-                titleService: true,
-                price: true
-              }
-            }
+            fkServices: true,
+            titleService: true,
+            price: true
           }
         },
         UserCustomer: {
@@ -145,17 +150,27 @@ export class CalledRepository {
   }
 
   async createServices(data: idUpdateServicesSchemaType){
+    const newService = await this.prisma.services.findMany({
+      where: {
+        id: data.idServices
+      }
+    })
+
+    if (!newService.length) {
+      throw new AppError("Alguns serviços não foram encontrados.", 400)
+    }
+
     return await this.prisma.called.update({
       where: {
         id: data.idCalled
       },
       data: {
         services: {
-          create: {
-            services: {
-              connect: { id: data.idServices }
-            }
-          }
+          create: newService.map(service => ({
+            fkServices: service.id,
+            titleService: service.titleService,
+            price: service.price
+          }))
         }
       },
       include: {

@@ -1,9 +1,7 @@
 type NestedService = {
-  services: {
-    id: string
-    titleService: string
-    price: number | string
-  }
+  fkServices: string
+  titleService: string
+  price: number | string
 }
 
 export type InputCalled = {

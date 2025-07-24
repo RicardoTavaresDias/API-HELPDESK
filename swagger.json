@@ -1982,12 +1982,12 @@
       "Add Service to Called": {
         "type": "object",
         "properties": {
-          "calledId": {
+          "idCalled": {
             "type": "integer",
             "description": "ID do chamado ao qual o serviço será adicionado.",
             "example": 1
           },
-          "serviceId": {
+          "idServices": {
             "type": "string",
             "format": "uuid",
             "description": "ID do serviço a ser adicionado ao chamado.",
@@ -1995,8 +1995,8 @@
           }
         },
         "required": [
-          "calledId",
-          "serviceId"
+          "idCalled",
+          "idServices"
         ]
       },
       "Update Called Status": {
