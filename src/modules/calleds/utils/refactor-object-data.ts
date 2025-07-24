@@ -1,5 +1,4 @@
 import { InputCalled } from "../types/calleds-response"
-import { basePrice } from "@/libs/basePrice"
 
 const refactorObjectData = (data: InputCalled[]) => {
   const result = data.map(called => {

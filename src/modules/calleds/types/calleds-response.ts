@@ -8,7 +8,8 @@ export type InputCalled = {
   services: NestedService[]
   id: number
   titleCalled: string
-  description: string
+  description: string 
+  basePrice: number | string
   createdAt: Date
   updatedAt: Date
   UserCustomer: {
