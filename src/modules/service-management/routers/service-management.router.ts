@@ -7,6 +7,6 @@ export const servicesRouter = Router()
 const servicesController = new ServicesController()
 
 servicesRouter.use(ensureAuthenticated)
-servicesRouter.get("/", userAuthorization(["admin", "technical"]), servicesController.index)
+servicesRouter.get("/", userAuthorization(["admin", "technical", "customer"]), servicesController.index)
 servicesRouter.post("/", userAuthorization(["admin"]), servicesController.create)
 servicesRouter.patch("/:id", userAuthorization(["admin"]), servicesController.update)

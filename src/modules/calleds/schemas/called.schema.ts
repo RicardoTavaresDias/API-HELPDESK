@@ -3,8 +3,14 @@ import z from "zod"
 export const createCalledsSchema = z.object({
   idCustomer: z.string().uuid(),
   idTechnical: z.string().uuid().optional(),
-  titleCalled: z.string().min(1, { message: "Campo Título obrigatório" }),
-  description: z.string().min(1, { message: "Campo Descrição obrigatório" }),
+  titleCalled: z.string()
+  .min(1, { message: "Campo Título obrigatório" })
+  .transform(title => title[0].toUpperCase().concat(title.substring(1))),
+  
+  description: z.string()
+  .min(1, { message: "Campo Descrição obrigatório" })
+  .transform(description => description[0].toUpperCase().concat(description.substring(1))),
+
   idServices: z.array(z.object({ 
     id: z.string().uuid() 
   }))
