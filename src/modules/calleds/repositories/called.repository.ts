@@ -3,6 +3,8 @@ import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSc
 import { AppError } from "@/utils/AppError";
 import { basePrice } from "@/libs/basePrice"
 
+import { showAvailableTechnician } from "./teste"
+
 export class CalledRepository {
   prisma: PrismaClient
 
@@ -11,6 +13,34 @@ export class CalledRepository {
   }
 
   async create(data: CreateCalledsSchemaType) {
+
+
+
+
+
+
+
+
+
+
+
+    // variaveis de entrada
+    const dataCliente = "2025-07-17T16:11:20.344Z" // pegar todos os chamados do dia que o cliente selecionou 
+    const horaDoCliente = "24:00"  // verifica os tecnicos disponivel nesse horario que o cliente selecionou
+    const teste = await showAvailableTechnician({ dataCliente, horaDoCliente })
+    if(teste[0].length === 0) return console.log("Não tem Técnico disponivel na data de hoje, agendar para próximo dia.")
+    return console.log(teste)
+
+
+
+
+
+
+
+
+
+
+
     const copyServices = await this.prisma.services.findMany({
       where: {
         id: {
