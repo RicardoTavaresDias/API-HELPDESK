@@ -37,6 +37,7 @@ class ServiceCalled {
       idCustomer: data.idCustomer,
       idTecnical: refatureDataTecnical[0].id,
       dateCustomer: data.dateCustomer,
+      hourCustomer: data.hourCustomer,
       titleCalled: data.titleCalled,
       description: data.description,
       idServices: data.idServices

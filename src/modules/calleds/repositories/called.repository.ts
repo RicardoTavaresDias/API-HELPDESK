@@ -1,9 +1,22 @@
 import { PrismaClient } from "@prisma/client";
-import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
+import { type IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
 import { AppError } from "@/utils/AppError";
 import { basePrice } from "@/libs/basePrice"
+import dayjs from "dayjs";
 
-import { showAvailableTechnician } from "./teste"
+type CreateCalledType = {
+  idCustomer: string,
+  idTecnical: string,
+  dateCustomer: string,
+  hourCustomer: string,
+  titleCalled: string,
+  description: string,
+  idServices: ServiceType[]
+}
+
+type ServiceType = {
+  id: string
+}
 
 export class CalledRepository {
   prisma: PrismaClient
@@ -12,35 +25,7 @@ export class CalledRepository {
     this.prisma = prisma
   }
 
-  async create(data: CreateCalledsSchemaType) {
-
-
-
-
-
-
-
-
-
-
-
-    // variaveis de entrada
-    const dataCliente = "2025-07-17T16:11:20.344Z" // pegar todos os chamados do dia que o cliente selecionou 
-    const horaDoCliente = "24:00"  // verifica os tecnicos disponivel nesse horario que o cliente selecionou
-    const teste = await showAvailableTechnician({ dataCliente, horaDoCliente })
-    if(teste[0].length === 0) return console.log("Não tem Técnico disponivel na data de hoje, agendar para próximo dia.")
-    return console.log(teste)
-
-
-
-
-
-
-
-
-
-
-
+  async create(data: CreateCalledType) {
     const copyServices = await this.prisma.services.findMany({
       where: {
         id: {
@@ -52,13 +37,14 @@ export class CalledRepository {
     if (!copyServices.length) {
       throw new AppError("Alguns serviços não foram encontrados.", 400)
     }
-    
+   
     return await this.prisma.called.create({
       data: {
         fkUserCustomer: data.idCustomer,
-        fkUserTechnical: data.idTechnical,
+        fkUserTechnical: data.idTecnical,
         titleCalled: data.titleCalled,
         description: data.description,
+        createdAt: new Date(`${data.dateCustomer}T${data.hourCustomer}:${dayjs().format("ss")}`),
         basePrice: Number(basePrice.price),
         services: {
           create: copyServices.map(calledService => ({
