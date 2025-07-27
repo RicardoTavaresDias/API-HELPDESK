@@ -11,9 +11,9 @@ export class CalledsController {
       if(!createSchema.success){
         return response.status(401).json({ message: createSchema.error.issues[0].message })
       }
-
-      const result = await serviceCalled.createCalled(createSchema.data)
-      response.status(201).json({ message: "Chamado criado com sucesso." })
+      
+      const result = await serviceCalled.createCalled(createSchema.data) as { nameTecnical: string }      
+      response.status(201).json({ message: `Chamado criado com sucesso, ${result.nameTecnical} atenderá seu chamado.` })
     }catch(error){
       next(error)
     }

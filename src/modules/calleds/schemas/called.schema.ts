@@ -2,7 +2,8 @@ import z from "zod"
 
 export const createCalledsSchema = z.object({
   idCustomer: z.string().uuid(),
-  idTechnical: z.string().uuid().optional(),
+  dateCustomer: z.string(),
+  hourCustomer: z.string(),
   titleCalled: z.string()
   .min(1, { message: "Campo Título obrigatório" })
   .transform(title => title[0].toUpperCase().concat(title.substring(1))),
