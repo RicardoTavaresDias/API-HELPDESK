@@ -78,19 +78,16 @@ class ServiceCalled {
     
     // seleciona todos do técnicos que esta disponivel para atedimento confome horario do cliente selecionou
     const tecnicalsAvailableInHours = 
-      hoursAllTecnical.map(value => {
-        const start = dayjs(value.userHours[0].startTime).format("HH:mm")
-        const end = dayjs(value.userHours[0].endTime).format("HH:mm")
-  
-        if(dayjs(`2025-05-01T${hourCustomer}`).isSameOrAfter(`2025-05-01T${start}`) && 
-            dayjs(`2025-05-01T${hourCustomer}`).isSameOrBefore(`2025-05-01T${end}`)
-          ){
-          return value
-        } 
-  
-        return null
-    }).filter(value => value !== null)
+      hoursAllTecnical.filter(value => {
+        return value.userHours.some(tech => {
+          const start = dayjs(tech.startTime).format("HH:mm")
+          const end = dayjs(tech.endTime).format("HH:mm")
 
+          return dayjs(`2025-05-01T${hourCustomer}`).isSameOrAfter(`2025-05-01T${start}`) && 
+          dayjs(`2025-05-01T${hourCustomer}`).isSameOrBefore(`2025-05-01T${end}`)
+        })
+    })
+  
     return tecnicalsAvailableInHours
   }
 
