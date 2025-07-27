@@ -95,8 +95,8 @@ class ServiceCalled {
     const resultTechnicianInService = await this.checkTechnicianInService({ dateCustomer, hourCustomer })
     const resultAvailableTechnician = await this.checkAvailableTechnician({ hourCustomer }) 
    
-    const tecnicalAvailable = resultAvailableTechnician.filter((value, index) => 
-      value.id !== resultTechnicianInService[index])
+    const tecnicalAvailable = resultAvailableTechnician.filter(value => 
+      !resultTechnicianInService.includes(value.id))
 
     return tecnicalAvailable
   }
