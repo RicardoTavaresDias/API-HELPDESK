@@ -51,7 +51,7 @@ class ServiceCalled {
     const calledAll = await this.repository.called.indexAll({})
     // filtra o chamado na data especifica que o cliente selecionou a data de atendimento
     const calledDate = calledAll.filter(value => 
-      dayjs(value.createdAt).format("DD/MM/YY") === 
+      dayjs(value.appointmentTime).format("DD/MM/YY") === 
       dayjs(dateCustomer).format("DD/MM/YY")
     )
    
@@ -63,7 +63,7 @@ class ServiceCalled {
   
     // elimina o tecnico que esta no horario de atendimento
     const searchTecnicalInService = result.map(value => { 
-      const hour = dayjs(value.createdAt).format("HH")
+      const hour = dayjs(value.appointmentTime).format("HH")
       if(hourCustomer.split(":")[0] === hour) return value.UserTechnical?.id
       return null
     })

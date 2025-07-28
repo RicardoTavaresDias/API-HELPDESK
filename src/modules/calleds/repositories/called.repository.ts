@@ -44,7 +44,7 @@ export class CalledRepository {
         fkUserTechnical: data.idTecnical,
         titleCalled: data.titleCalled,
         description: data.description,
-        createdAt: new Date(`${data.dateCustomer}T${data.hourCustomer}:${dayjs().format("ss")}`),
+        appointmentTime: new Date(`${data.dateCustomer}T${data.hourCustomer}:${dayjs().format("ss")}`),
         basePrice: Number(basePrice.price),
         services: {
           create: copyServices.map(calledService => ({
@@ -72,6 +72,7 @@ export class CalledRepository {
         description: true,
         createdAt: true,
         basePrice: true,
+        appointmentTime: true,
         services: {
           select: {
             fkServices: true,

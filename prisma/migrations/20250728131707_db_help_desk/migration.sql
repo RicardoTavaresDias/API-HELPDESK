@@ -30,6 +30,7 @@ CREATE TABLE "called" (
     "description" TEXT NOT NULL,
     "basePrice" DECIMAL NOT NULL,
     "call_status" TEXT NOT NULL DEFAULT 'open',
+    "appointment_Time" DATETIME NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME,
     CONSTRAINT "called_fk_user_customer_fkey" FOREIGN KEY ("fk_user_customer") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
