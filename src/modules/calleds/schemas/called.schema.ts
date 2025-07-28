@@ -1,9 +1,15 @@
 import z from "zod"
+import { dayjs } from "@/libs/dayjs"
 
 export const createCalledsSchema = z.object({
   idCustomer: z.string().uuid(),
-  dateCustomer: z.string(),
-  hourCustomer: z.string(),
+  dateCustomer: z.string()
+    .min(1, { message: "Campo obrigatório" })
+    .refine((value) => dayjs(value).isSame(dayjs(), "day") || dayjs(value).isAfter(dayjs(), "day"), { message: "Data informado incorreto."}),
+
+  hourCustomer: z.string()
+    .min(1, { message: "Campo obrigatório" }),
+
   titleCalled: z.string()
   .min(1, { message: "Campo Título obrigatório" })
   .transform(title => title[0].toUpperCase().concat(title.substring(1))),
@@ -17,6 +23,15 @@ export const createCalledsSchema = z.object({
   }))
   .min(1, { message: "Deve ter pelo menos um serviço cadastrado." }),
 })
+  .refine(date => {
+    if(dayjs(dayjs().format(`${date.dateCustomer}T${date.hourCustomer}`)).isSameOrBefore(dayjs(), "hour")){
+      return false
+    }
+    return true
+  }, {
+    path: ["hourCustomer", "dateCustomer"], 
+    message: "data e hora incorretos." 
+  })
 
 export type CreateCalledsSchemaType = z.infer<typeof createCalledsSchema>
 
