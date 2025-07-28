@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 enum UserRole {
@@ -105,52 +105,3 @@ enum UserRole {
 
   @@map("called_services")
  }
-
-
- // Tabela view criados no banco de dados, somente leitura no prisma, são ignorados na criação de tabelas.
- 
-/*
- model VWUserTechnical {
-  id String 
-  name String
-  email String
-  password String
-  role String
-  avatar String
-  startTime DateTime @map("start_time")
-  endTime DateTime @map("end_time")
-  createdAt DateTime  @map("created_at")
-  updatedAt DateTime? @map("updated_at")
-
-  @@map("vw_user_technical")
-  @@ignore
- }
-
- model VWCalled {
-  createdAt DateTime @map("created_at")
-  id String 
-  titleCalled String @map("title_called")
-  titleService String @map("title_service")
-  valueTotal Decimal @map("value_total")
-  customer String
-  technical String
-  callStatus String @map("call_status")
-
-  @@map("vw_called")
-  @@ignore
- }
-
- model VWCalledServices {
-  idCalled String @map("id_called")
-  idServices String @map("id_services")
-  titleService String @map("title_service")
-  value Decimal
-  serviceStatus String @map("service_status")
-  createdAt DateTime  @map("created_at")
-  updatedAt DateTime? @map("updated_at")
-
-  @@map("vw_called_services")
-  @@ignore
- }
- */
- 

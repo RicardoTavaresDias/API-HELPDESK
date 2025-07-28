@@ -49,7 +49,7 @@ class ServiceCalled {
 
   async listCallsBySchedule ({ dateCustomer }: DateCustomerType) {
     const calledAll = await this.repository.called.indexAll({})
-    // filtra o chamado na data especifica que o cliente selecionou a data de atendimento
+    // filtra todos os chamado na data especifica conforme o cliente agendou
     const calledDate = calledAll.filter(value => 
       dayjs(value.appointmentTime).format("DD/MM/YY") === 
       dayjs(dateCustomer).format("DD/MM/YY")
@@ -61,7 +61,7 @@ class ServiceCalled {
   async checkTechnicianInService ({ dateCustomer, hourCustomer }: DataType) {
     const result = await this.listCallsBySchedule({ dateCustomer })
   
-    // elimina o tecnico que esta no horario de atendimento
+    // elimina os tecnicos qeu já estão agendados em outros chamados
     const searchTecnicalInService = result.map(value => { 
       const hour = dayjs(value.appointmentTime).format("HH")
       if(hourCustomer.split(":")[0] === hour) return value.UserTechnical?.id
@@ -73,10 +73,10 @@ class ServiceCalled {
   }
 
   async checkAvailableTechnician ({ hourCustomer }: HourCustomerType) {
-    // consulta tooos os tecnicos na lista userHours para ultilizar o id fkUserTechnical
+    // consulta todos os tecnicos no banco de dados.
     const hoursAllTecnical = await this.repository.user.indexAll({ role: "technical"})
     
-    // seleciona todos do técnicos que esta disponivel para atedimento confome horario do cliente selecionou
+    // seleciona todos os técnicos que esta disponivel para atedimento confome horario do cliente agendou
     const tecnicalsAvailableInHours = 
       hoursAllTecnical.filter(value => {
         return value.userHours.some(tech => {
@@ -95,6 +95,7 @@ class ServiceCalled {
     const resultTechnicianInService = await this.checkTechnicianInService({ dateCustomer, hourCustomer })
     const resultAvailableTechnician = await this.checkAvailableTechnician({ hourCustomer }) 
    
+    // remove os tecnicos que não estão disponivel
     const tecnicalAvailable = resultAvailableTechnician.filter(value => 
       !resultTechnicianInService.includes(value.id))
 
