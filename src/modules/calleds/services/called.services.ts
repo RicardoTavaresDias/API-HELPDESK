@@ -123,12 +123,12 @@ class ServiceCalled {
     }
   }
 
-  async indexUser (data: { page: number, limit: number } & IndexUserSchemaType) {
+  async indexUser (data: { page: number, limit: number, status?: "open" | "close" | "in_progress" } & IndexUserSchemaType) {
     const indexUserCout = await this.repository.called.indexUserCout({ id: data.id, role: data.role })
     const resultPagination = pagination(data.page, indexUserCout, data.limit)
     const { skip, ...rest } = resultPagination
 
-    const resultDb =  await this.repository.called.indexUserAll({ skip: skip, take: data.limit, id: data.id, role: data.role })
+    const resultDb =  await this.repository.called.indexUserAll({ skip: skip, take: data.limit, id: data.id, role: data.role, status: data.status })
     const resultMap = refactorObjectData(resultDb as InputCalled[] | [])
 
     return {

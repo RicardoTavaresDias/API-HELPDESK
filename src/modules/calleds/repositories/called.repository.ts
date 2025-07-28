@@ -107,13 +107,16 @@ export class CalledRepository {
     return await this.prisma.called.count()
   }
 
-  async indexUserAll(data: { skip: number, take: number } & IndexUserSchemaType) {
+  async indexUserAll(data: { skip: number, take: number, status?: "open" | "close" | "in_progress" } & IndexUserSchemaType) {
     const userId = data.role === "customer" ? 
       { fkUserCustomer: data.id } : 
       { fkUserTechnical: data.id }
 
     return await this.prisma.called.findMany({
-      where: userId ,
+      where: {
+        ...userId,
+        callStatus: data.status
+      },
       select: {
         updatedAt: true,
         id: true,
@@ -149,7 +152,7 @@ export class CalledRepository {
     })
   }
 
-  async indexUserCout(data: IndexUserSchemaType){
+  async indexUserCout(data: Omit<IndexUserSchemaType, 'status'>){
     const userId = data.role === "customer" ? 
       { fkUserCustomer: data.id } : 
       { fkUserTechnical: data.id }

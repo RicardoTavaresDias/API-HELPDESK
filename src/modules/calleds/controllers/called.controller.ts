@@ -58,7 +58,7 @@ export class CalledsController {
     } 
 
     try {
-      const userSchema = indexUserSchema.safeParse(request.user)
+      const userSchema = indexUserSchema.safeParse({ ...request.user, status: request.query.status })
       if(!userSchema.success){
         return response.status(401).json({ message: userSchema.error.issues[0].message })
       }
@@ -67,7 +67,8 @@ export class CalledsController {
          page: Number(page), 
          limit: Number(limit), 
          id: userSchema.data.id, 
-         role: userSchema.data.role 
+         role: userSchema.data.role, 
+         status: request.query.status as "open" | "close" | "in_progress"
       })
       
       response.status(200).json(result)

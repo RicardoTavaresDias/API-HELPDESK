@@ -37,7 +37,8 @@ export type CreateCalledsSchemaType = z.infer<typeof createCalledsSchema>
 
 export const indexUserSchema = z.object({
   id: z.string().uuid(),
-  role: z.enum(["customer", "technical"])
+  role: z.enum(["customer", "technical"]),
+  status: z.enum(["open", "close", "in_progress"])
 })
 
 export type IndexUserSchemaType = z.infer<typeof indexUserSchema>
