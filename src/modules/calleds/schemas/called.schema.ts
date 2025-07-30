@@ -57,3 +57,17 @@ export const idUpdateServicesSchema = z.object({
 
 export type idUpdateServicesSchemaType = z.infer<typeof idUpdateServicesSchema>
 export type idServicesType = z.infer<typeof idUpdateServicesSchema>
+
+export const createCalledCommentShema = z.object({
+  idCalled: z.coerce.number(),
+  idUser: z.string().uuid(),
+  description: z.string().min(1, {  message: "Campo Descrição obrigatório" })
+})
+
+export type CreateCalledCommentType = z.infer<typeof createCalledCommentShema>
+
+export const updateCalledCommentShema = z.object({
+  description: z.string().min(1, {  message: "Campo Descrição obrigatório" })
+})
+
+export type UpdateCalledCommentType = z.infer<typeof updateCalledCommentShema>

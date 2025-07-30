@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { type IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
+import { type IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType, CreateCalledCommentType, UpdateCalledCommentType } from "../schemas/called.schema"
 import { AppError } from "@/utils/AppError";
 import { basePrice } from "@/libs/basePrice"
 import dayjs from "dayjs";
@@ -80,6 +80,19 @@ export class CalledRepository {
             price: true
           }
         },
+        calledComments: {
+          select: {
+            comment: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatar: true,
+                role: true
+              }
+            }
+          }
+        },
         UserCustomer: {
           select: {
             id: true,
@@ -128,6 +141,19 @@ export class CalledRepository {
             fkServices: true,
             titleService: true,
             price: true
+          }
+        },
+         calledComments: {
+          select: {
+            comment: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatar: true,
+                role: true
+              }
+            }
           }
         },
         UserCustomer: {
@@ -221,4 +247,38 @@ export class CalledRepository {
       }
     })
   }
+
+  async createCommentsCalled({ description, idUser, idCalled }: CreateCalledCommentType){
+    return await this.prisma.comments.create({
+      data: {
+        description: description,
+        calledComments: {
+          create: {
+            fkUser: idUser,
+            fkCalled: idCalled
+          }
+        }
+      },
+      include: {
+        calledComments: true
+      }
+    })
+  }  
+
+  async updateCommentsCalled({ description, id }: { description: string, id: string }){
+    return await this.prisma.comments.update({
+      where: {
+        id: id
+      },
+      data: { description: description }
+    })
+  }  
+
+  async removeCommentsCalled(id: string){
+    return await this.prisma.comments.delete({
+      where: {
+        id: id
+      }
+    })
+  }  
 }

@@ -60,5 +60,26 @@ CREATE TABLE "called_services" (
     CONSTRAINT "called_services_fk_services_fkey" FOREIGN KEY ("fk_services") REFERENCES "services" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "called_comments" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "fk_called" INTEGER NOT NULL,
+    "fk_comments" TEXT NOT NULL,
+    "fk_user" TEXT NOT NULL,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME,
+    CONSTRAINT "called_comments_fk_called_fkey" FOREIGN KEY ("fk_called") REFERENCES "called" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "called_comments_fk_comments_fkey" FOREIGN KEY ("fk_comments") REFERENCES "comments" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "called_comments_fk_user_fkey" FOREIGN KEY ("fk_user") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "comments" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "description" TEXT NOT NULL,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");

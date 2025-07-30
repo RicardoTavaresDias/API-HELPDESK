@@ -1,5 +1,5 @@
 import Repository from "@/repositories"
-import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType } from "../schemas/called.schema"
+import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType, CreateCalledCommentType, UpdateCalledCommentType } from "../schemas/called.schema"
 import type { InputCalled } from "../types/calleds-response"
 import { pagination } from "@/libs/pagination"
 import { refactorObjectData } from "../utils/refactor-object-data"
@@ -147,6 +147,18 @@ class ServiceCalled {
 
   async removeServicesCalled (data: idServicesType) {
     return await this.repository.called.removeServices(data)
+  }
+
+  async createComments (data: CreateCalledCommentType) {
+    return await this.repository.called.createCommentsCalled(data)
+  }
+
+  async updateComments (data: { description: string, id: string }) {
+    return await this.repository.called.updateCommentsCalled(data)
+  }
+
+  async removeComments (id: string) {
+    return await this.repository.called.removeCommentsCalled(id)
   }
 }
 

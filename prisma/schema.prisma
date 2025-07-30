@@ -31,6 +31,7 @@ enum UserRole {
   userHours UserHours []
   calledCustomer Called[] @relation("CustomerCalls")
   calledTechnical Called[] @relation("TechnicalCalls")
+  calledComments CalledComments[]
 
   @@map("user")
  }
@@ -69,6 +70,7 @@ enum UserRole {
   UserCustomer User @relation("CustomerCalls", fields: [fkUserCustomer], references: [id], onDelete: Cascade)
   UserTechnical User? @relation("TechnicalCalls", fields: [fkUserTechnical], references: [id], onDelete: Cascade)
   services CalledServices[]
+  calledComments CalledComments[]
 
   @@map("called")
  }
@@ -104,4 +106,30 @@ enum UserRole {
   services Services @relation(fields: [fkServices], references: [id], onDelete: Cascade)
 
   @@map("called_services")
+ }
+
+ model CalledComments {
+  id String @id @default(uuid())
+  fkCalled Int @map("fk_called")
+  fkComments String @map("fk_comments")
+  fkUser String @map("fk_user")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  called Called @relation(fields: [fkCalled], references: [id], onDelete: Cascade)
+  comment Comments @relation(fields: [fkComments], references: [id], onDelete: Cascade)
+  user User @relation(fields: [fkUser], references: [id], onDelete: Cascade)
+
+  @@map("called_comments")
+}
+
+ model Comments {
+  id String @id @default(uuid())
+  description String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  calledComments CalledComments[]
+
+  @@map("comments")
  }

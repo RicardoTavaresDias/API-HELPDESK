@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"; 
 import { ServiceCalled } from "../services/called.services"
-import { createCalledsSchema, indexUserSchema, updateStatusCalledSchema, idUpdateServicesSchema, idUpdateServicesSchema as idServices } from "../schemas/called.schema"
+import { createCalledsSchema, indexUserSchema, updateStatusCalledSchema, idUpdateServicesSchema, idUpdateServicesSchema as idServices, createCalledCommentShema, updateCalledCommentShema } from "../schemas/called.schema"
 
 const serviceCalled = new ServiceCalled()
 
@@ -115,6 +115,58 @@ export class CalledsController {
       await serviceCalled.removeServicesCalled(dataId.data)
       response.status(200).json({ message: "Serviço removido com sucesso." })
     }catch(error) {
+      next(error)
+    }
+  }
+
+  async createComments(request: Request, response: Response, next: NextFunction){
+    try {
+      const createCommentsSchema = createCalledCommentShema.safeParse(request.body)
+      if(!createCommentsSchema.success){
+        return response.status(401).json({ message: createCommentsSchema.error.issues[0].message })
+      }
+
+      await serviceCalled.createComments(createCommentsSchema.data)
+      response.status(201).json({ message: "Seu acompanhamneto criado com sucesso" })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async updateComments(request: Request, response: Response, next: NextFunction){
+    try {
+      if(!request.params.id){
+        return response.status(400).json({ message: "Id inválido." })
+      }
+
+      const updateCommentsSchema = updateCalledCommentShema.safeParse(request.body)
+      if(!updateCommentsSchema.success){
+        return response.status(401).json({ message: updateCommentsSchema.error.issues[0].message })
+      }
+
+      const { description } = updateCommentsSchema.data
+
+      await serviceCalled.updateComments({ 
+        description: description, 
+        id: request.params.id 
+      })
+      response.status(201).json({ message: "Seu acompanhamneto atualizado com sucesso" })
+
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async removeComments(request: Request, response: Response, next: NextFunction){
+    try {
+      if(!request.params.id){
+        return response.status(400).json({ message: "Id inválido." })
+      }
+
+      await serviceCalled.removeComments(request.params.id)
+      response.status(201).json({ message: "Acompanhamento removido com sucesso" })
+
+    } catch (error) {
       next(error)
     }
   }
