@@ -148,7 +148,8 @@ export class CalledsController {
 
       await serviceCalled.updateComments({ 
         description: description, 
-        id: request.params.id 
+        commentid: request.params.id,
+        userId: request.user?.id!
       })
       response.status(201).json({ message: "Seu Acompanhamento atualizado com sucesso" })
 

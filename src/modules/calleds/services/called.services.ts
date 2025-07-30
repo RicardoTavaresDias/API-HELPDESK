@@ -153,7 +153,7 @@ class ServiceCalled {
     return await this.repository.called.createCommentsCalled(data)
   }
 
-  async updateComments (data: { description: string, id: string }) {
+  async updateComments (data: { description: string, commentid: string, userId: string }) {
     return await this.repository.called.updateCommentsCalled(data)
   }
 

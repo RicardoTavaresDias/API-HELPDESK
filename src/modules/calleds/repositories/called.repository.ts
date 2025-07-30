@@ -271,12 +271,23 @@ export class CalledRepository {
     })
   }  
 
-  async updateCommentsCalled({ description, id }: { description: string, id: string }){
+  async updateCommentsCalled({ description, commentid, userId }: { description: string, commentid: string, userId: string }){
     return await this.prisma.comments.update({
       where: {
-        id: id
+        id: commentid
       },
-      data: { description: description }
+      data: { 
+        description: description,
+        calledComments: {
+          updateMany: {
+            where: {
+              fkComments: commentid
+            },
+           data: {
+            fkUser: userId
+           }
+        }
+      }}
     })
   }  
 
