@@ -91,6 +91,9 @@ export class CalledRepository {
                 role: true
               }
             }
+          },
+          orderBy: {
+            createdAt: "desc"
           }
         },
         UserCustomer: {
@@ -154,6 +157,9 @@ export class CalledRepository {
                 role: true
               }
             }
+          },
+          orderBy: {
+            createdAt: "desc"
           }
         },
         UserCustomer: {
@@ -174,7 +180,7 @@ export class CalledRepository {
         callStatus: true,
       },
       skip: data.skip,
-      take: data.take
+      take: data.take,      
     })
   }
 
