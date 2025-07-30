@@ -150,7 +150,7 @@ export class CalledsController {
         description: description, 
         id: request.params.id 
       })
-      response.status(201).json({ message: "Seu acompanhamneto atualizado com sucesso" })
+      response.status(201).json({ message: "Seu Acompanhamento atualizado com sucesso" })
 
     } catch (error) {
       next(error)
