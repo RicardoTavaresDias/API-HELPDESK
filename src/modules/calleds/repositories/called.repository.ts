@@ -3,6 +3,7 @@ import { type IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateService
 import { AppError } from "@/utils/AppError";
 import { basePrice } from "@/libs/basePrice"
 import dayjs from "dayjs";
+import { UpdateCommentCalledType } from "../types/calleds-response";
 
 type CreateCalledType = {
   idCustomer: string,
@@ -254,10 +255,11 @@ export class CalledRepository {
     })
   }
 
-  async createCommentsCalled({ description, idUser, idCalled }: CreateCalledCommentType){
+  async createCommentsCalled({ description, idUser, idCalled, type }: CreateCalledCommentType){
     return await this.prisma.comments.create({
       data: {
         description: description,
+        type: type,
         calledComments: {
           create: {
             fkUser: idUser,
@@ -271,13 +273,14 @@ export class CalledRepository {
     })
   }  
 
-  async updateCommentsCalled({ description, commentid, userId }: { description: string, commentid: string, userId: string }){
+  async updateCommentsCalled({ description, commentid, userId, type }: UpdateCommentCalledType){
     return await this.prisma.comments.update({
       where: {
         id: commentid
       },
       data: { 
         description: description,
+        type: type,
         calledComments: {
           updateMany: {
             where: {

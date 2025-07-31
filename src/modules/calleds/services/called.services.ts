@@ -1,6 +1,6 @@
 import Repository from "@/repositories"
 import { type CreateCalledsSchemaType, IndexUserSchemaType, UpdateStatusCalledSchemaType, idUpdateServicesSchemaType, idServicesType, CreateCalledCommentType, UpdateCalledCommentType } from "../schemas/called.schema"
-import type { InputCalled } from "../types/calleds-response"
+import type { InputCalled, UpdateCommentCalledType } from "../types/calleds-response"
 import { pagination } from "@/libs/pagination"
 import { refactorObjectData } from "../utils/refactor-object-data"
 import { dayjs } from "@/libs/dayjs"
@@ -153,7 +153,7 @@ class ServiceCalled {
     return await this.repository.called.createCommentsCalled(data)
   }
 
-  async updateComments (data: { description: string, commentid: string, userId: string }) {
+  async updateComments (data: UpdateCommentCalledType) {
     return await this.repository.called.updateCommentsCalled(data)
   }
 

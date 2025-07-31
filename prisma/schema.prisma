@@ -123,9 +123,15 @@ enum UserRole {
   @@map("called_comments")
 }
 
+ enum TypeComment {
+  followUp
+  task
+ }
+
  model Comments {
   id String @id @default(uuid())
   description String
+  type TypeComment @default(followUp)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 

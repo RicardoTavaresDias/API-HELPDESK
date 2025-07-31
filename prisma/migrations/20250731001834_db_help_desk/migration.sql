@@ -77,6 +77,7 @@ CREATE TABLE "called_comments" (
 CREATE TABLE "comments" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "description" TEXT NOT NULL,
+    "type" TEXT NOT NULL DEFAULT 'followUp',
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME
 );

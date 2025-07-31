@@ -26,3 +26,10 @@ export type InputCalled = {
   }
   callStatus: string
 }
+
+export type UpdateCommentCalledType = { 
+  description?: string, 
+  commentid: string, 
+  userId: string, 
+  type?: "followUp" | "task"
+}

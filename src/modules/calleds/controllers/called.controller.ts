@@ -144,10 +144,11 @@ export class CalledsController {
         return response.status(401).json({ message: updateCommentsSchema.error.issues[0].message })
       }
 
-      const { description } = updateCommentsSchema.data
-
+      const { description, type } = updateCommentsSchema.data
+      
       await serviceCalled.updateComments({ 
-        description: description, 
+        description, 
+        type,
         commentid: request.params.id,
         userId: request.user?.id!
       })
