@@ -32,10 +32,12 @@ class ServiceCalled {
     } 
   
     const refatureDataTecnical = resultTecnical.map(tecnical => ({ id: tecnical.id, name: tecnical.name }))
+    // sorteio tecnico se tiver mais que um técnico disponivel
+    const operatorDrawTechnician = Math.floor(Math.random() * (refatureDataTecnical.length - 0) + 0)
 
     const dataRefature = {
       idCustomer: data.idCustomer,
-      idTecnical: refatureDataTecnical[0].id,
+      idTecnical: refatureDataTecnical[operatorDrawTechnician].id,
       dateCustomer: data.dateCustomer,
       hourCustomer: data.hourCustomer,
       titleCalled: data.titleCalled,
