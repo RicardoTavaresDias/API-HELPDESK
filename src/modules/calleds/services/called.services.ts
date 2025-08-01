@@ -46,7 +46,7 @@ class ServiceCalled {
     }
 
     await this.repository.called.create(dataRefature)
-    return { nameTecnical: refatureDataTecnical[0].name }
+    return { nameTecnical: refatureDataTecnical[operatorDrawTechnician].name }
   }
 
   async listCallsBySchedule ({ dateCustomer }: DateCustomerType) {
