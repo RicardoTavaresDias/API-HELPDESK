@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx --watch --env-file .env src/server.ts"
+    "dev": "tsx --watch --env-file .env src/server.ts",  
+    "import": "tsx database/importDataBase.ts",
+    "export": "tsx database/exportDataBase.ts"
   },
   "prisma_Comentarios": {
     "gerar_banco_de_dados": "npx prisma migrate dev",
