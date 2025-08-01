@@ -623,20 +623,20 @@
           "400": {
             "description": "Dados inválidos."
           },
+          "401": {
+            "description": "Não autenticado."
+          },
           "403": {
             "description": "Acesso negado."
           },
           "409": {
             "description": "Já existe um serviço com esse título."
-          },
-          "401": {
-            "description": "Não autenticado."
           }
         }
       },
       "get": {
-        "description": "Lista todos os serviços registrados no sistema com paginação. Administradores e técnicos têm acesso.",
-        "summary": "Listar serviços (admin/technical)",
+        "description": "Lista todos os serviços registrados no sistema com paginação. Todos os usuários autenticados têm acesso.",
+        "summary": "Listar serviços",
         "tags": [
           "Services"
         ],
@@ -702,6 +702,42 @@
           },
           "403": {
             "description": "Acesso negado."
+          }
+        }
+      }
+    },
+    "/services/base": {
+      "get": {
+        "description": "Retorna o valor base atualizado do serviço.",
+        "summary": "Buscar Preço Base de Deslocamento",
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preço base retornado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "price": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 50.00
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado."
           }
         }
       }
@@ -869,7 +905,7 @@
     },
     "/calleds": {
       "post": {
-        "description": "Cria um novo chamado no sistema. Apenas usuários com as roles 'admin' ou 'customer' podem criar um chamado.",
+        "description": "Cria um novo chamado no sistema. Apenas usuários com as roles 'admin' ou 'customer' podem criar um chamado. O sistema atribui automaticamente um técnico disponível com base no horário agendado.",
         "summary": "Criar Chamado",
         "tags": [
           "Calleds"
@@ -884,7 +920,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Create Called"
+                "$ref": "#/components/schemas/CreateCalledWithSchedule"
               }
             }
           }
@@ -899,7 +935,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Chamado criado com sucesso."
+                      "example": "Chamado criado com sucesso, [Nome do Técnico] atenderá seu chamado."
                     }
                   }
                 }
@@ -907,7 +943,7 @@
             }
           },
           "400": {
-            "description": "Dados inválidos.",
+            "description": "Dados inválidos ou não há técnicos disponíveis no horário selecionado.",
             "content": {
               "application/json": {
                 "schema": {
@@ -915,7 +951,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Campo Título obrigatório"
+                      "example": "Todos os técnicos já estão agendados nesse horário. Escolha outro horário ou dia."
                     }
                   }
                 }
@@ -932,7 +968,7 @@
       },
       "get": {
         "description": "Lista todos os chamados com paginação. Apenas administradores podem listar todos os chamados.",
-        "summary": "Listar todos os Chamados",
+        "summary": "Listar todos os Chamados (Admin)",
         "tags": [
           "Calleds"
         ],
@@ -1022,6 +1058,20 @@
               "minimum": 1,
               "example": 10
             }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filtra chamados por status.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "in_progress",
+                "close"
+              ]
+            }
           }
         ],
         "responses": {
@@ -1047,73 +1097,10 @@
         }
       }
     },
-    "/called/{id}": {
-      "get": {
-        "description": "Retorna os detalhes de um chamado específico pelo ID",
-        "summary": "Buscar Chamado por ID",
-        "tags": [
-          "Calleds"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID do chamado a ser buscado.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "example": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Detalhes do chamado retornados com sucesso.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Called by Id Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "ID do chamado inválido.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Id inválido."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Não autenticado."
-          },
-          "403": {
-            "description": "Acesso negado (somente administradores podem acessar esta rota)."
-          },
-          "404": {
-            "description": "Chamado não encontrado."
-          }
-        }
-      }
-    },
     "/calleds/services": {
       "patch": {
-        "description": "Adiciona um serviço a um chamado existente. Apenas técnicos e administradores podem adicionar serviços aos chamados.",
-        "summary": "Adicionar serviço ao Chamado",
+        "description": "Adiciona um serviço a um chamado existente. Apenas técnicos podem adicionar serviços aos chamados.",
+        "summary": "Adicionar serviço ao Chamado (Technical)",
         "tags": [
           "Calleds"
         ],
@@ -1169,13 +1156,199 @@
             "description": "Não autenticado."
           },
           "403": {
-            "description": "Acesso negado (somente técnicos e administradores podem adicionar serviços aos chamados)."
+            "description": "Acesso negado (somente técnicos podem adicionar serviços aos chamados)."
           },
           "404": {
             "description": "Chamado ou serviço não encontrado."
           },
           "409": {
             "description": "Serviço já existe neste chamado."
+          }
+        }
+      }
+    },
+    "/calleds/comment": {
+      "post": {
+        "description": "Cria um novo comentário ou tarefa em um chamado. Apenas administradores e técnicos podem criar comentários.",
+        "summary": "Criar comentário no chamado (Admin/Technical)",
+        "tags": [
+          "Calleds"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCalledComment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Seu acompanhamneto criado com sucesso"
+          },
+          "401": {
+            "description": "Não autenticado ou dados de validação de esquema inválidos."
+          },
+          "403": {
+            "description": "Acesso negado."
+          }
+        }
+      }
+    },
+    "/calleds/comment/{id}": {
+      "patch": {
+        "description": "Atualiza um comentário ou tarefa existente em um chamado. Apenas administradores e técnicos podem atualizar.",
+        "summary": "Atualizar comentário no chamado (Admin/Technical)",
+        "tags": [
+          "Calleds"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do comentário a ser atualizado.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCalledComment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Seu Acompanhamento atualizado com sucesso"
+          },
+          "400": {
+            "description": "Id inválido."
+          },
+          "401": {
+            "description": "Não autenticado ou dados de validação de esquema inválidos."
+          },
+          "403": {
+            "description": "Acesso negado."
+          }
+        }
+      },
+      "delete": {
+        "description": "Remove um comentário ou tarefa de um chamado. Apenas administradores e técnicos podem remover.",
+        "summary": "Remover comentário do chamado (Admin/Technical)",
+        "tags": [
+          "Calleds"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do comentário a ser removido.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Acompanhamento removido com sucesso"
+          },
+          "400": {
+            "description": "Id inválido."
+          },
+          "401": {
+            "description": "Não autenticado."
+          },
+          "403": {
+            "description": "Acesso negado."
+          }
+        }
+      }
+    },
+    "/calleds/{id}": {
+      "get": {
+        "description": "Retorna os detalhes de um chamado específico pelo ID",
+        "summary": "Buscar Chamado por ID",
+        "tags": [
+          "Calleds"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do chamado a ser buscado.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes do chamado retornados com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Called by Id Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID do chamado inválido.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Id inválido."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado."
+          },
+          "403": {
+            "description": "Acesso negado."
+          },
+          "404": {
+            "description": "Chamado não encontrado."
           }
         }
       }
@@ -1365,45 +1538,7 @@
         "type": "object",
         "properties": {
           "user": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "format": "uuid",
-                "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
-              },
-              "name": {
-                "type": "string",
-                "example": "João da Silva"
-              },
-              "email": {
-                "type": "string",
-                "format": "email",
-                "example": "joao.silva@example.com"
-              },
-              "role": {
-                "type": "string",
-                "enum": [
-                  "admin",
-                  "customer",
-                  "technical"
-                ],
-                "example": "customer"
-              },
-              "avatar": {
-                "type": "string",
-                "nullable": true,
-                "example": "http://localhost:3333/user/avatar/avatar.png"
-              },
-              "createdAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "updatedAt": {
-                "type": "string",
-                "format": "date-time"
-              }
-            }
+            "$ref": "#/components/schemas/User"
           },
           "token": {
             "type": "string",
@@ -1532,45 +1667,11 @@
         ]
       },
       "User by Id Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "ff9e1bf3-eaf7-4f71-b5a0-d0d806a553a3"
-          },
-          "name": {
-            "type": "string",
-            "example": "Nome do Usuário"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "usuario@example.com"
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "customer",
-              "technical",
-              "admin"
-            ],
-            "example": "customer"
-          },
-          "avatar": {
-            "type": "string",
-            "nullable": true,
-            "example": "http://localhost:3333/user/avatar/avatar.png"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User"
           }
-        }
+        ]
       },
       "Update User": {
         "type": "object",
@@ -1625,12 +1726,12 @@
         "properties": {
           "titleService": {
             "type": "string",
-            "example": "Formatação de Computador"
+            "example": "Preço base"
           },
           "price": {
             "type": "number",
             "format": "float",
-            "example": 150.00
+            "example": 200
           }
         },
         "required": [
@@ -1705,39 +1806,11 @@
         }
       },
       "Service by Id Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
-          },
-          "titleService": {
-            "type": "string",
-            "example": "Instalação de Software"
-          },
-          "price": {
-            "type": "number",
-            "format": "float",
-            "example": 75.50
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "active",
-              "inactive"
-            ],
-            "example": "active"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Service"
           }
-        }
+        ]
       },
       "Update Service": {
         "type": "object",
@@ -1761,9 +1834,24 @@
           }
         }
       },
-      "Create Called": {
+      "CreateCalledWithSchedule": {
         "type": "object",
         "properties": {
+          "idCustomer": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID do usuário cliente que está abrindo o chamado. Será preenchido automaticamente com o ID do usuário logado."
+          },
+          "dateCustomer": {
+            "type": "string",
+            "example": "2025-12-31",
+            "description": "Data para o agendamento do chamado. Não pode ser uma data passada."
+          },
+          "hourCustomer": {
+            "type": "string",
+            "example": "14:30",
+            "description": "Hora para o agendamento do chamado. Não pode ser uma hora passada."
+          },
           "titleCalled": {
             "type": "string",
             "example": "Computador não liga"
@@ -1771,19 +1859,6 @@
           "description": {
             "type": "string",
             "example": "Meu computador não está ligando desde ontem. Já tentei reiniciar várias vezes, mas não funciona."
-          },
-          "idUserCustomer": {
-            "type": "string",
-            "format": "uuid",
-            "description": "ID do usuário cliente que está abrindo o chamado. (Será preenchido automaticamente com o ID do usuário logado se a role for 'customer'.)",
-            "example": "e7c5b9a1-8d2f-4c3e-9b0d-1a2b3c4d5e6f"
-          },
-          "idUserTechnical": {
-            "type": "string",
-            "format": "uuid",
-            "description": "ID do usuário técnico atribuído ao chamado (opcional).",
-            "nullable": true,
-            "example": "f8a7b6c5-4d3e-2f1a-0b9c-8d7e6f5a4b3c"
           },
           "idServices": {
             "type": "array",
@@ -1804,9 +1879,12 @@
           }
         },
         "required": [
+          "idCustomer",
+          "dateCustomer",
+          "hourCustomer",
           "titleCalled",
           "description",
-          "idUserCustomer"
+          "idServices"
         ]
       },
       "Called": {
@@ -1824,6 +1902,11 @@
             "type": "string",
             "example": "Meu computador não está ligando desde ontem. Já tentei reiniciar várias vezes, mas não funciona."
           },
+          "appointmentTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data e hora agendada para o atendimento."
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -1837,7 +1920,7 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": {
+                "fkServices": {
                   "type": "string",
                   "format": "uuid"
                 },
@@ -1860,124 +1943,66 @@
           "callStatus": {
             "type": "string",
             "enum": [
-              "pending",
+              "open",
               "in_progress",
-              "completed",
-              "canceled"
+              "close"
             ],
-            "example": "pending"
+            "example": "open"
+          },
+          "calledComments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalledComment"
+            }
+          },
+          "basePrice": {
+            "type": "number",
+            "format": "float",
+            "description": "Preço base de deslocamento do técnico.",
+            "example": 50.00
           },
           "priceTotal": {
             "type": "number",
             "format": "float",
-            "description": "Soma total dos preços dos serviços associados ao chamado.",
-            "example": 225.50
+            "description": "Soma total dos preços dos serviços associados ao chamado mais o preço base.",
+            "example": 275.50
           }
-        },
-        "required": [
-          "id",
-          "titleCalled",
-          "description",
-          "createdAt",
-          "updatedAt",
-          "services",
-          "UserCustomer",
-          "callStatus",
-          "priceTotal"
-        ]
+        }
       },
       "List Calleds Response": {
         "type": "object",
         "properties": {
-          "calleds": {
+          "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Called"
             }
           },
-          "currentPage": {
-            "type": "integer",
-            "example": 1
-          },
-          "totalPages": {
-            "type": "integer",
-            "example": 5
-          },
-          "totalCalleds": {
-            "type": "integer",
-            "example": 45
+          "result": {
+            "type": "object",
+            "properties": {
+              "currentPage": {
+                "type": "integer",
+                "example": 1
+              },
+              "totalPages": {
+                "type": "integer",
+                "example": 5
+              },
+              "totalItems": {
+                "type": "integer",
+                "example": 45
+              }
+            }
           }
         }
       },
       "Called by Id Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
-          },
-          "titleCalled": {
-            "type": "string",
-            "example": "Computador não liga"
-          },
-          "description": {
-            "type": "string",
-            "example": "Meu computador não está ligando desde ontem. Já tentei reiniciar várias vezes, mas não funciona."
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "services": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "titleService": {
-                  "type": "string"
-                },
-                "price": {
-                  "type": "number",
-                  "format": "float"
-                }
-              }
-            },
-            "description": "Lista de serviços associados a este chamado."
-          },
-          "UserCustomer": {
-            "$ref": "#/components/schemas/User",
-            "description": "Informações do cliente que abriu o chamado."
-          },
-          "UserTechnical": {
-            "$ref": "#/components/schemas/User",
-            "description": "Informações do técnico atribuído ao chamado (se houver)."
-          },
-          "callStatus": {
-            "type": "string",
-            "enum": [
-              "pending",
-              "in_progress",
-              "completed",
-              "canceled"
-            ],
-            "example": "pending",
-            "description": "O status atual do chamado."
-          },
-          "priceTotal": {
-            "type": "number",
-            "format": "float",
-            "description": "O preço total de todos os serviços associados ao chamado.",
-            "example": 225.50
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Called"
           }
-        }
+        ]
       },
       "Add Service to Called": {
         "type": "object",
@@ -2002,47 +2027,115 @@
       "Update Called Status": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "description": "ID do chamado cujo status será atualizado.",
-            "example": 1
-          },
           "status": {
             "type": "string",
             "enum": [
-              "pending",
+              "open",
               "in_progress",
-              "completed",
-              "canceled"
+              "close"
             ],
             "description": "O novo status do chamado.",
             "example": "in_progress"
           }
         },
         "required": [
-          "id",
           "status"
         ]
       },
-      "Remove Service from Called": {
+      "CreateCalledComment": {
         "type": "object",
         "properties": {
           "idCalled": {
             "type": "integer",
-            "description": "ID do chamado do qual o serviço será removido.",
-            "example": 1
+            "description": "ID do chamado ao qual o comentário será adicionado."
           },
-          "idServices": {
+          "idUser": {
             "type": "string",
             "format": "uuid",
-            "description": "ID do serviço a ser removido do chamado.",
-            "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+            "description": "ID do usuário (técnico ou admin) que está criando o comentário."
+          },
+          "description": {
+            "type": "string",
+            "description": "Conteúdo do comentário ou da tarefa."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "followUp",
+              "task"
+            ],
+            "description": "Tipo de comentário, se é um acompanhamento (followUp) ou uma tarefa (task)."
           }
         },
         "required": [
           "idCalled",
-          "idServices"
+          "idUser",
+          "description",
+          "type"
         ]
+      },
+      "UpdateCalledComment": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Novo conteúdo do comentário ou da tarefa."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "followUp",
+              "task"
+            ],
+            "description": "Novo tipo de comentário."
+          }
+        }
+      },
+      "UserInComment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "uri"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "technical"
+            ]
+          }
+        }
+      },
+      "CalledComment": {
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "followUp",
+                  "task"
+                ]
+              }
+            }
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserInComment"
+          }
+        }
       }
     },
     "securitySchemes": {

@@ -8,7 +8,7 @@ export const servicesRouter = Router()
 const servicesController = new ServicesController()
 
 servicesRouter.use(ensureAuthenticated)
-servicesRouter.get("/base", (request: Request, response: Response) => { return response.json(basePrice) })
+servicesRouter.get("/base", servicesController.servicesBasePrice)
 servicesRouter.get("/", userAuthorization(["admin", "technical", "customer"]), servicesController.index)
 servicesRouter.post("/", userAuthorization(["admin"]), servicesController.create)
 servicesRouter.patch("/:id", userAuthorization(["admin"]), servicesController.update)

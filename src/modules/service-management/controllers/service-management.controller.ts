@@ -3,6 +3,7 @@ import { ServicesManagement } from "../services/service-management.service";
 import type { StatusServicesEnum } from "../schemas/service-management.schema"
 import { servicesSchema, statusServicesEnum, updateSchema } from "../schemas/service-management.schema"
 import type { UpdateSchemaType } from "../schemas/service-management.schema"
+import { basePrice } from "@/libs/basePrice";
 
 const servicesManagement = new ServicesManagement()
 
@@ -58,6 +59,14 @@ export class ServicesController {
         { id: request.params.id, data: schemaUpdate.data } as { id: string, data: UpdateSchemaType }
       )
       response.status(200).json({ message: "Dados atualizado com sucesso" })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async servicesBasePrice (request: Request, response: Response, next: NextFunction) { 
+    try {
+      return response.status(200).json(basePrice) 
     } catch (error) {
       next(error)
     }
