@@ -1353,7 +1353,7 @@
         }
       }
     },
-    "/calleds/{idCalled}": {
+    "/calleds/{id}": {
       "patch": {
         "description": "Atualiza o status de um chamado. Apenas administradores e técnicos podem atualizar o status de um chamado.",
         "summary": "Atualizar Status do Chamado (Admin/Technical)",
@@ -1432,7 +1432,7 @@
         }
       }
     },
-    "/calleds/{idCalled}/{idServices}": {
+    "/calleds/{id}/services/{idServices}": {
       "delete": {
         "description": "Remove um serviço de um chamado existente. Apenas técnicos podem remover serviços dos chamados.",
         "summary": "Remover Serviço do Chamado (Technical)",

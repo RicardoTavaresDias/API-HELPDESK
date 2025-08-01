@@ -144,6 +144,14 @@ class ServiceCalled {
   }
 
   async createServicesCalled (data: idUpdateServicesSchemaType) {
+    const servicesExistCalled = await this.indexByCalled(data.idCalled)
+    const [ called ] = servicesExistCalled
+    const filterIdServices = called.services.map(service => service.id)
+
+    if(filterIdServices.includes(data.idServices)) {
+      throw new AppError("Item já cadastrado no chamado", 400)
+    }
+    
     return await this.repository.called.createServices(data)
   }
 
