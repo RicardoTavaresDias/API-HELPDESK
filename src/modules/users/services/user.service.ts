@@ -32,7 +32,7 @@ class UserServices {
   async createUserCustomer (data: UserSchematype) {
     const userExist = await this.existUser(data.email)
     if(!userExist){
-      const hashPassword =  await hash(data.password, 12)
+      const hashPassword =  await hash(data.password, 8)
       return await this.repository.user.createCustomer({...data, password: hashPassword})
     }
     
@@ -42,7 +42,7 @@ class UserServices {
   async createUserTechnical (data: TechnicalSchemaType) {
     const userExist = await this.existUser(data.email)
     if(!userExist){
-      const hashPassword =  await hash(data.password, 12)
+      const hashPassword =  await hash(data.password, 8)
       return await this.repository.user.createTechnical({...data, password: hashPassword})
     }
 
@@ -103,7 +103,7 @@ class UserServices {
       throw new AppError("Senha atual incorreto.", 401)
     }
 
-    const newPasswordHash = await hash(newPassword, 12)
+    const newPasswordHash = await hash(newPassword, 8)
     return this.repository.user.update({ id, dataUpdate: { password: newPasswordHash } })
   }
 
