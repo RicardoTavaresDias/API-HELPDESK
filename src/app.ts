@@ -9,8 +9,10 @@ import swaggerDocument from "../swagger.json"
 const app = express()
 
 app.use(cors({
-  origin: 'https://helpdesk-react-iota.vercel.app'
-  // origin: 'http://localhost:5173'
+  origin: [ 
+    'https://helpdesk-react-iota.vercel.app',
+    'http://localhost:5173/'
+  ]
 }))
 
 app.use(express.json())
