@@ -24,7 +24,8 @@ export const createCalledsSchema = z.object({
   .min(1, { message: "Deve ter pelo menos um serviço cadastrado." }),
 })
   .refine(date => {
-    if(dayjs(dayjs().format(`${date.dateCustomer}T${date.hourCustomer}`)).isSameOrBefore(dayjs(), "hour")){
+    if(dayjs.tz(dayjs().tz("America/Sao_Paulo").format(`${date.dateCustomer}T${date.hourCustomer}`), "America/Sao_Paulo")
+      .isSameOrBefore(dayjs().tz("America/Sao_Paulo"), "hour")){
       return false
     }
     return true
