@@ -45,7 +45,7 @@ export class CalledRepository {
         fkUserTechnical: data.idTecnical,
         titleCalled: data.titleCalled,
         description: data.description,
-        appointmentTime: new Date(`${data.dateCustomer}T${data.hourCustomer}:${dayjs().format("ss")}`),
+        appointmentTime: dayjs.tz(`${data.dateCustomer}T${data.hourCustomer}`, "America/Sao_Paulo").toDate(),
         basePrice: Number(basePrice.price),
         services: {
           create: copyServices.map(calledService => ({

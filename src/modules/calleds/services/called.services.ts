@@ -53,8 +53,8 @@ class ServiceCalled {
     const calledAll = await this.repository.called.indexAll({})
     // filtra todos os chamado na data especifica conforme o cliente agendou
     const calledDate = calledAll.filter(value => 
-      dayjs(value.appointmentTime).format("DD/MM/YY") === 
-      dayjs(dateCustomer).format("DD/MM/YY")
+      dayjs(value.appointmentTime).tz("America/Sao_Paulo").format("DD/MM/YY") === 
+      dayjs.tz(dateCustomer, "America/Sao_Paulo").format("DD/MM/YY")
     )
    
     return calledDate
@@ -65,7 +65,7 @@ class ServiceCalled {
   
     // elimina os tecnicos qeu já estão agendados em outros chamados
     const searchTecnicalInService = result.map(value => { 
-      const hour = dayjs(value.appointmentTime).format("HH")
+      const hour = dayjs(value.appointmentTime).tz("America/Sao_Paulo").format("HH")
       if(hourCustomer.split(":")[0] === hour) return value.UserTechnical?.id
       return null
     })
@@ -82,11 +82,11 @@ class ServiceCalled {
     const tecnicalsAvailableInHours = 
       hoursAllTecnical.filter(value => {
         return value.userHours.some(tech => {
-          const start = dayjs(tech.startTime).format("HH:mm")
-          const end = dayjs(tech.endTime).format("HH:mm")
+          const start = dayjs(tech.startTime).tz("America/Sao_Paulo").format("HH:mm")
+          const end = dayjs(tech.endTime).tz("America/Sao_Paulo").format("HH:mm")
+          const hourClient = dayjs(`2025-05-01T${hourCustomer}`).tz("America/Sao_Paulo")
 
-          return dayjs(`2025-05-01T${hourCustomer}`).isSameOrAfter(`2025-05-01T${start}`) && 
-          dayjs(`2025-05-01T${hourCustomer}`).isSameOrBefore(`2025-05-01T${end}`)
+          return hourClient.isSameOrAfter(`2025-05-01T${start}`) && hourClient.isSameOrBefore(`2025-05-01T${end}`)
         })
     })
   
