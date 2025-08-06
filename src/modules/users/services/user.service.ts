@@ -4,7 +4,7 @@ import { emailSchema } from "../schemas/user.schema"
 import type { EmailSchemaType, TechnicalSchemaType, UserSchematype} from "../schemas/user.schema"
 import { AppError } from "@/utils/AppError"
 import { hash, compare } from "bcrypt"
-import fs from "node:fs"
+import { supabase } from "@/config/supabaseClient"
 
 export type UpdateUserType = {
   name?: string
@@ -15,7 +15,14 @@ export type UpdateUserType = {
     startTime: Date
     endTime: Date
   }[]
+  file?: {
+    buffer: Buffer
+    originalname: string
+    mimetype: string
+  }
 } 
+
+
 
 class UserServices {
   repository = new Repository()
@@ -79,12 +86,28 @@ class UserServices {
     const existUser = await this.repository.user.isUser({ id })
     if(!existUser) throw new AppError("Usuários não encontrado.", 404)
     
-    if(dataUpdate.avatar){
+    if(dataUpdate.file){
+      const time = new Date().getTime()
+      const fileName = `${time}.${dataUpdate.file.originalname.split(".")[1]}`
+
       if(existUser.avatar !== "default.svg"){
-        fs.unlinkSync(`./upload/${existUser.avatar}`)
+        await supabase.storage.from("upload").remove([existUser.avatar])
       }
-    
-      dataUser.avatar = dataUpdate.avatar
+
+      const { error } = await supabase
+        .storage
+        .from("upload") // nome do bucket
+        .upload(fileName, dataUpdate.file.buffer, {
+          contentType: dataUpdate.file.mimetype,
+          upsert: false
+      })
+
+      if(error) {
+        throw new AppError("Erro ao enviar imagem", 500)
+      }
+      
+      delete dataUser.file
+      dataUser.avatar = fileName
     }
     
     if(existUser.role === "customer" && dataUser.userHours){
@@ -107,13 +130,15 @@ class UserServices {
     return this.repository.user.update({ id, dataUpdate: { password: newPasswordHash } })
   }
 
-  async  removerUser (id: string) {
+  async removerUser (id: string) {
     const existUser = await this.repository.user.isUser({ id })
     if(!existUser){
       throw new AppError("Usuários não encontrado.", 404)
     }
 
-    return await this.repository.user.remove(id)
+    await this.repository.user.remove(id)
+    await supabase.storage.from("upload").remove([existUser.avatar])
+    return 
   }
 
   async removeAvatar (id: string) {
@@ -122,12 +147,7 @@ class UserServices {
       throw new AppError("Usuários não encontrado.", 404)
     }
 
-    if(!fs.existsSync(`./upload/${existUser.avatar}`)){
-      throw new AppError("Arquivo não encontrado.", 404)
-    }
-
-    fs.unlinkSync(`./upload/${existUser.avatar}`)
-    
+    await supabase.storage.from("upload").remove([existUser.avatar])  
     const result = await this.repository.user.update({ id, dataUpdate: { avatar: "default.svg" } })
 
     return { result }

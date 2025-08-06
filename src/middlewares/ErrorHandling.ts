@@ -6,6 +6,7 @@ import { errorPrisma } from "../utils/prismaError"
 
 export function ErrorHandling(error: any, request: Request, response: Response, next: NextFunction) {
   if(error instanceof AppError){
+    console.log(error)
     response.status(error.statusCode).json({ message: error.message })
     return
   }
@@ -20,10 +21,10 @@ export function ErrorHandling(error: any, request: Request, response: Response, 
     if(!err){
       return response.status(400).json({ message: error.meta })
     } 
-
+    
     response.status(err.startCode).json({ message: err.message, error: error.meta })
     return
   }
-
+  
   response.status(500).json({ message: error.message })
 }

@@ -80,7 +80,7 @@ export class UserController {
         return response.status(400).json({ message: user.error.issues[0].message })
       }
 
-      const data = request.file ? { ...user.data, avatar: request.file.filename } : user.data
+      const data = request.file ? { ...user.data, file: request.file } : user.data
       const responseUpdateUser = await userServices.updateUser({ id: idUser, dataUpdate: data})
       response.status(200).json(responseUpdateUser)
     } catch (error) {
