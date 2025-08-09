@@ -61,7 +61,7 @@ enum UserRole {
   fkUserTechnical String? @map("fk_user_technical")
   titleCalled String @map("title_called")
   description String
-  basePrice Decimal
+  basePrice Decimal @db.Decimal(10, 2)
   callStatus CalledStatus @default(open) @map("call_status")
   appointmentTime DateTime @map("appointment_Time")
   createdAt DateTime @default(now()) @map("created_at")
@@ -83,7 +83,7 @@ enum UserRole {
  model Services {
   id String @id @default(uuid())
   titleService String @map("title_service")
-  price Decimal
+  price Decimal @db.Decimal(10, 2)
   serviceStatus ServicesStatus @default(active) @map("service_status")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
@@ -98,7 +98,7 @@ enum UserRole {
   fkCalled Int @map("fk_called")
   fkServices String @map("fk_services")
   titleService String @map("title_service")
-  price Decimal
+  price Decimal @db.Decimal(10, 2)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
