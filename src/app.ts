@@ -10,7 +10,9 @@ const app = express()
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://helpdesk-react-iota.vercel.app'
+  'https://helpdesk-react-iota.vercel.app',
+  'http://localhost:3000',
+  'https://teste-xa9g.onrender.com'
 ]
 
 app.use(cors({
