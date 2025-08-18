@@ -23,6 +23,11 @@ class ServiceCalled {
   repository = new Repository()
 
   async createCalled (data: CreateCalledsSchemaType) {
+    const isUserCustomer = await this.repository.user.isUser({ id: data.idCustomer })
+    if(isUserCustomer?.role !== "customer") {
+      throw new AppError("Somente usuários com perfil de cliente podem abrir chamados. Verifique seu cadastro ou entre em contato com o suporte.", 400)
+    }
+
     const resultTecnical = await this.showAvailableTechnician({ 
       dateCustomer: data.dateCustomer, hourCustomer: data.hourCustomer 
     })

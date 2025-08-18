@@ -7,7 +7,7 @@ export const calledRouter = Router()
 const calledsController = new CalledsController()
 
 calledRouter.use(ensureAuthenticated)
-calledRouter.post("/", userAuthorization(["admin", "customer"]), calledsController.create)
+calledRouter.post("/", userAuthorization(["customer"]), calledsController.create)
 calledRouter.get("/", userAuthorization(["admin"]), calledsController.indexAll)
 calledRouter.get("/user", userAuthorization(["customer", "technical"]), calledsController.indexUser)
 calledRouter.patch("/services", userAuthorization(["technical"]), calledsController.addServices)
