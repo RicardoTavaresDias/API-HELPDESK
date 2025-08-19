@@ -12,7 +12,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'https://helpdesk-react-iota.vercel.app',
   'http://localhost:3000',
-  'https://teste-xa9g.onrender.com'
+  'https://helpdesk-whatsapp-baileys.onrender.com'
 ]
 
 app.use(cors({
