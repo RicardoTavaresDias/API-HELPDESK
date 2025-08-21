@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.3",
+  "HelpDesk": "1.8.9",
   "info": {
     "title": "HelpDesk API",
     "description": "Essa API foi desenvolvida para um sistema completo de criação de chamados e atendimentos HELPDESK.",

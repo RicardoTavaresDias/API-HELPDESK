@@ -1,0 +1,766 @@
+type: collection.insomnia.rest/5.0
+name: HelpDesk
+meta:
+  id: wrk_62a434e0030441c6a23875b644b55046
+  created: 1750519576522
+  modified: 1750519576522
+collection:
+  - name: User
+    meta:
+      id: fld_183f6f031b5943d8a522bb84cce08b94
+      created: 1750519587391
+      modified: 1750981292223
+      sortKey: -1750755275361.5
+    children:
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/customer"
+        name: Create Cliente
+        meta:
+          id: req_5b859737d12b4c2d9c926cf7ab4e5246
+          created: 1750519592104
+          modified: 1753035331404
+          isPrivate: false
+          sortKey: -1750519592104
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "janeie",
+            	"email": "janeie@email.com",
+            	"password": "123456"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/technical"
+        name: Create Tecnico ( admin )
+        meta:
+          id: req_b3ea00791b724a0f911d7a9b2e116215
+          created: 1750527241859
+          modified: 1753370799928
+          isPrivate: false
+          sortKey: -1749193981500
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Mateus",
+            	"email": "mateus@email.com",
+            	"password": "123456",
+            	"role": "technical",
+            	"userHours": [
+            		{
+            			"startTime": "2025-06-21T08:00:00.003Z",
+            			"endTime": "2025-06-21T11:00:00.003Z"
+            		}
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/list/customer"
+        name: index Usuarios Customer ( admin )
+        meta:
+          id: req_d10dbfe314614a338cd28702a0eae5a1
+          created: 1750945810149
+          modified: 1752498586611
+          isPrivate: false
+          sortKey: -1750945810149
+        method: GET
+        parameters:
+          - id: pair_ff6c036360444ded86cb05a455132344
+            name: page
+            value: "1"
+            disabled: false
+          - id: pair_9af4bfc5fb254d14ba5087a8062087a0
+            name: limit
+            value: "30"
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/3658abbb-95e5-458a-b32c-d9f8f8d62e94"
+        name: "update  Usuario "
+        meta:
+          id: req_63c4c2952ce94cc98af88c4843a71bad
+          created: 1750945835647
+          modified: 1754443711759
+          isPrivate: false
+          sortKey: -1750945835647
+        method: PATCH
+        body:
+          mimeType: multipart/form-data
+          params:
+            - id: pair_620a7e7fdf394bfe86e6ce245c87e1ab
+              name: data
+              value: |-
+                {
+                	"name": "teste Mateus",
+                	"password" : "123456789"
+                }
+              disabled: true
+              type: text
+              multiline: application/json
+            - id: pair_86ccadaeee604eb49b3c1eb541d08812
+              name: file
+              disabled: false
+              type: file
+              fileName: C:\Users\Ricardo\Pictures\287f2a60c2e74386b5a89c517eb527dc.png
+        parameters:
+          - id: pair_44e7505a606e4cd6923718f21550bfee
+            disabled: true
+          - id: pair_2145d051befa464eac5a4fdbc82b96d5
+            disabled: true
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/0e76c0d3-21b6-4048-8992-9fd052d09e13"
+        name: remove Usuario ( admin / customer )
+        meta:
+          id: req_caafa600ae0e428786b7b6bd14832271
+          created: 1750945870325
+          modified: 1751289775611
+          isPrivate: false
+          sortKey: -1750945870325
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/avatar/1751507329352.png"
+        name: avatar
+        meta:
+          id: req_6e92c319021845d89d5e9348aa26b99f
+          created: 1751053382897
+          modified: 1751508520911
+          isPrivate: false
+          sortKey: -1750737599711
+        method: GET
+        parameters:
+          - id: pair_32705115c00a4df2b305bb4a2a0df3be
+            disabled: true
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/list/technical"
+        name: index Usuarios Technical ( admin )
+        meta:
+          id: req_d0d358c444e3447e9143af52126eeebe
+          created: 1751132925140
+          modified: 1752498594469
+          isPrivate: false
+          sortKey: -1750841704930
+        method: GET
+        parameters:
+          - id: pair_ff6c036360444ded86cb05a455132344
+            name: page
+            value: "1"
+            disabled: false
+          - id: pair_9af4bfc5fb254d14ba5087a8062087a0
+            name: limit
+            value: "20"
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/c3a37d4d-4dc9-4324-9747-ff0eb1175cde"
+        name: show ID User
+        meta:
+          id: req_be1c95e4cd244c3dafe008fef2b17998
+          created: 1751146029003
+          modified: 1752498633002
+          isPrivate: false
+          sortKey: -1750789652320.5
+        method: GET
+        parameters:
+          - id: pair_bce2ac4dda1f412ab73d3c98823d8c63
+            disabled: true
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/avatar/delete"
+        name: remove avatar
+        meta:
+          id: req_849002a6721b4a96ba325890b8b27046
+          created: 1752187795604
+          modified: 1752495636824
+          isPrivate: false
+          sortKey: -1752187795604
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE
+          }}/c3a37d4d-4dc9-4324-9747-ff0eb1175cde/changePassword"
+        name: update password
+        meta:
+          id: req_b8b5171bc70642798b7cb7e11a3c817e
+          created: 1752240526581
+          modified: 1752498686937
+          isPrivate: false
+          sortKey: -1750945822898
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"oldPassword": "123456",
+            	"newPassword": "123456"
+            }
+        parameters:
+          - id: pair_44e7505a606e4cd6923718f21550bfee
+            disabled: true
+          - id: pair_2145d051befa464eac5a4fdbc82b96d5
+            disabled: true
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_7bc5cd06b573494cb43a67766f682bc7',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+    environment:
+      RESOURCE: /user
+    environmentPropertyOrder:
+      "&":
+        - RESOURCE
+  - name: Services
+    meta:
+      id: fld_90da40e3ebab45568759955ecc8d454d
+      created: 1750981161450
+      modified: 1752355258479
+      sortKey: -1750981161450
+    children:
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}"
+        name: Create ( admin )
+        meta:
+          id: req_24d4364562ce418da2eb2a702a52a9e3
+          created: 1750981198780
+          modified: 1753371015256
+          isPrivate: false
+          sortKey: -1750981198780
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"title": "Configuração de E-mail Corporativo",
+            	"price": "110,00"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/a757227c-29a3-47d1-b78a-74789737d886"
+        name: Update ( admin )
+        meta:
+          id: req_74d81d5252094dd09950860c0cb9c4ed
+          created: 1750981206348
+          modified: 1753315410742
+          isPrivate: false
+          sortKey: -1750981206348
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"status": "inactive"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}"
+        name: Index ( admin / technical )
+        meta:
+          id: req_dd465ba5bb544447947544e8386b550b
+          created: 1750981208921
+          modified: 1753219493306
+          isPrivate: false
+          sortKey: -1750981208921
+        method: GET
+        parameters:
+          - id: pair_5c44bb68571741b5957b7f5e6417d66e
+            name: status
+            value: active
+            disabled: false
+          - id: pair_6ef1db3f9dc1401086ccdf857ef4ce3d
+            name: status
+            value: inactive
+            disabled: true
+          - id: pair_0e40fa369fae4adc9bf692595141490c
+            name: page
+            value: "1"
+            disabled: false
+          - id: pair_56551f7f0a3049978c440666e394b6e9
+            name: limit
+            value: "5"
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_7bc5cd06b573494cb43a67766f682bc7',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+    environment:
+      RESOURCE: /services
+    environmentPropertyOrder:
+      "&":
+        - RESOURCE
+  - name: Calleds
+    meta:
+      id: fld_ba3b8ec88d9d428aa57300f308e40a2c
+      created: 1752355247326
+      modified: 1752427580750
+      sortKey: -1752355247326
+    children:
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}"
+        name: Create ( admin, customer )
+        meta:
+          id: req_48de9afe632e47f29a4609ab966d96c8
+          created: 1752355292875
+          modified: 1755480736809
+          isPrivate: false
+          sortKey: -1752355292875
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"idCustomer": "ee2984a9-25b8-4ad3-82a8-efb431534ee1",
+            	"titleCalled": "Backup não está funcionando",
+            	"description": "O sistema de backup automático parou de funcionar. Última execução bem-sucedida foi há uma semana.",
+            	"dateCustomer": "2025-08-18",
+            	"hourCustomer": "13:00",
+            	"idServices": [
+            		{ "id": "ced4b5d2-317a-46f3-9b33-186f4bbd994a" }
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}"
+        name: indexAll ( admin )
+        meta:
+          id: req_aa90deef1fc54d1fa14837b483510ed2
+          created: 1752426893488
+          modified: 1752544915381
+          isPrivate: false
+          sortKey: -1752426893488
+        method: GET
+        parameters:
+          - id: pair_35a2acce679b49da820e14f04f90d41a
+            name: page
+            value: "1"
+            disabled: false
+          - id: pair_cd9ea9402e2844d7ab9c1ca59bf58292
+            name: limit
+            value: "10"
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/user"
+        name: index User ( customer, technical )
+        meta:
+          id: req_10ced1e738534efc9cf6d8d41fdea686
+          created: 1752426938738
+          modified: 1753798280501
+          isPrivate: false
+          sortKey: -1752426938738
+        method: GET
+        parameters:
+          - id: pair_26186a330e5f43cf9d5284292b8721da
+            name: page
+            value: "1"
+            disabled: false
+          - id: pair_97e91f01b5674370a7d86a5aa9d93467
+            name: limit
+            value: "10"
+            disabled: false
+          - id: pair_3505c33fa05c40a99dfe076d6a22cd77
+            name: status
+            value: ope
+            disabled: true
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/services"
+        name: update add services ( technical )
+        meta:
+          id: req_d7f4b4e7b2a445b09fe5257239f7b6f2
+          created: 1752426970767
+          modified: 1753330008354
+          isPrivate: false
+          sortKey: -1752426970767
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"idCalled": "2",
+            	"idServices": "53bd6a2e-7325-44dd-affc-c8d7abcdd25e"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/2"
+        name: update status called ( admin, technical )
+        meta:
+          id: req_f84a44b4aad344259a35f2cccea507a1
+          created: 1752427043447
+          modified: 1754083652813
+          isPrivate: false
+          sortKey: -1752427043447
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"status": "open"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE
+          }}/2/services/53bd6a2e-7325-44dd-affc-c8d7abcdd25e"
+        name: Remove services called
+        meta:
+          id: req_e439e7753d6e4caf9641a7db00651a71
+          created: 1752427093001
+          modified: 1754083829650
+          isPrivate: false
+          sortKey: -1752427093001
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/1"
+        name: index by called ( admin )
+        meta:
+          id: req_39e172e3112a4d47b4c156850cdfabe9
+          created: 1752533399147
+          modified: 1754083245447
+          isPrivate: false
+          sortKey: -1752391093181.5
+        method: GET
+        parameters:
+          - id: pair_0aae47c386f34f63aad931ccab084a91
+            disabled: true
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE }}/comment"
+        name: Create Comment Called ( admin, customer )
+        meta:
+          id: req_febfdd3e1767415f974a29550b14777a
+          created: 1753893808910
+          modified: 1753902843271
+          isPrivate: false
+          sortKey: -1752271544239.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"idCalled" : "1",
+            	"idUser" : "2f25c25c-4830-4810-8893-df5568992a97",
+            	"description" : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit beatae ea ab officiis in repudiandae. Velit nobis alias exercitationem asperiores non! Quibusdam exercitationem tempore vitae nostrum dignissimos ad quae id!"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE
+          }}/comment/0e210a30-8489-4dbf-9158-4d354c2f2768"
+        name: Update Comment Called ( admin, customer )
+        meta:
+          id: req_42ce0f88fb1648a286ae5685758047c6
+          created: 1753895452101
+          modified: 1754083408420
+          isPrivate: false
+          sortKey: -1752229669921.75
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"description" : "description teste",
+            	"type": ""
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASEURL }}{{ _.RESOURCE
+          }}/comment/0e210a30-8489-4dbf-9158-4d354c2f2768"
+        name: Remove Comment Called ( admin, customer )
+        meta:
+          id: req_b681e2a62d1d405e8be92fc18a953ae6
+          created: 1753901315943
+          modified: 1753901334925
+          isPrivate: false
+          sortKey: -1752208732762.875
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_7bc5cd06b573494cb43a67766f682bc7',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+    environment:
+      RESOURCE: /calleds
+    environmentPropertyOrder:
+      "&":
+        - RESOURCE
+  - url: "{{ _.BASEURL }}"
+    name: Session
+    meta:
+      id: req_7bc5cd06b573494cb43a67766f682bc7
+      created: 1750529389273
+      modified: 1755574673240
+      isPrivate: false
+      sortKey: -1750529389273
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"email": "admin@email.com",
+        	"password": "123456"
+        }
+    parameters:
+      - id: pair_06b6ccb3d7734cfe9a11595c42a35782
+        disabled: true
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_570548c1b071835a918cd2cd3a59333fbeeb755f
+    created: 1750519576530
+    modified: 1750519576530
+environments:
+  name: Base Environment
+  meta:
+    id: env_570548c1b071835a918cd2cd3a59333fbeeb755f
+    created: 1750519576528
+    modified: 1755575136361
+    isPrivate: false
+  data:
+    BASEURL: https://api-helpdesk-kky6.onrender.com
